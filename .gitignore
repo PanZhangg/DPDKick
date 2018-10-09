@@ -53,3 +53,4 @@ dkms.conf
 
 *.pyc
 *.swp
+*.swo

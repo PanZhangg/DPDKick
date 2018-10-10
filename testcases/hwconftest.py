@@ -25,8 +25,8 @@ class hwconftest(unittest.TestCase):
 
         if (ret == -1):
             NUMA_ENABLED_IN_BIOS = True
-        #print self.nics.nic_pci_address(0)
-        #print self.nics.nic_code_name(0)
+        print self.nics.get_nic_LnkCap(0)
+        print self.nics.get_nic_LnkSta(0)
         #print self.nics.nic_pci_conf 
 
     """

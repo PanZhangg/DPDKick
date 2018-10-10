@@ -9,13 +9,13 @@ class CPU_conf:
         self.str_CPU_code_name = self.get_CPU_code_name()
         self.str_instruction_supported = self.get_CPU_instructions_supported()
         self.cpu_core_total_num = self.get_CPU_cores_total_num()
-        self.b_HT_enabled = self.HT_is_enabled()
+        self.b_hyperthread_enabled = self.hyperthread_is_enabled()
         self.cores = []
 
     """
     CPU related utility functions
     """
-    
+
     def print_lscpu_cmd(self):
         command = 'lscpu'
         output = os.popen(command, 'r').read()
@@ -31,20 +31,27 @@ class CPU_conf:
         return ll.strip()
 
     def get_CPU_code_name(self):
-        pass
-    
-    def HT_is_enabled(self):
-        pass
-    
+        output = self.print_lscpu_cmd()
+        name = self.get_lscpu_specific_conf('Model name')
+        return name
+
+    def hyperthread_is_enabled(self):
+        output = self.print_lscpu_cmd()
+        tpc = self.get_lscpu_specific_conf('Thread(s) per core')
+        if int(tcp) == 1:
+            return False
+        else
+            return True
+
+
     def get_CPU_cores_total_num(self):
         output = self.print_lscpu_cmd()
         num = self.get_lscpu_specific_conf('CPU(s)')
         return int(num)
-    
+
     def get_CPU_instructions_supported(self):
         pass
-    
-    
+
 class single_CPU_core_conf:
     def __init__(self, core_num, numa_node):
         self.core_num = core_num
@@ -80,7 +87,7 @@ class Single_NIC_conf:
 class Single_NIC_conf_82599(Single_NIC_conf):
     def __init__(self):
         super.__init__(self)
-    
+
 class NICs_conf:
     lspci_nic_cmd = 'lspci | grep Ether'
 
@@ -95,7 +102,7 @@ class NICs_conf:
     """
     def NIC_rx_queue_num(self):
         pass
-    
+
     def NIC_tx_queue_num(self):
         pass
 
@@ -121,14 +128,14 @@ class NICs_conf:
     def get_nic_code_name(self, list_num):
         output = self.str_nic_pci_conf.splitlines()[list_num].split(':')[2]
         return output
-        
+
     def get_nic_LnkCap(self, list_num):
         output = self.get_lspci_vv_info(list_num)
         loc = output.rfind('LnkCap')
         str_tmp = output[loc :]
         loc = str_tmp.find('Speed')
         return str_tmp[loc + 6 : loc + 11]
-    
+
     def get_nic_LnkSta(self, list_num):
         output = self.get_lspci_vv_info(list_num)
         loc = output.find('LnkSta')
@@ -140,7 +147,6 @@ class NICs_conf:
         output = self.get_lspci_vv_info(list_num)
         loc = output.find('NUMA node')
         return int(output[loc + 11 : loc + 12])
-        
 
     def get_nic_ker_drv_in_use(self, list_num):
         output = self.get_lspci_vv_info(list_num)
@@ -155,7 +161,7 @@ class NICs_conf:
         LnkSta = self.get_nic_LnkSta(list_num)
         pci_addr = self.get_nic_pci_address(list_num)
         ker_drv = self.get_nic_ker_drv_in_use(list_num)
-        
+
         sig_nic = Single_NIC_conf(code_name = code_name, rx_q_num = 0,
                                   tx_q_num = 0, numa_node = numa_node,
                                   LnkCap = LnkCap, LnkSta = LnkSta,
@@ -166,7 +172,6 @@ class NICs_conf:
     def init_all_nics_conf(self):
         for i in range(self.nic_total_num):
             self.init_single_nic_conf(i)
-    
 
 """
 Huagepage related configurations
@@ -177,7 +182,7 @@ class Huagepage_conf:
     """
     def Huagepage_size(self):
         pass
-    
+
     def Huagepage_num(self):
         pass
 
@@ -185,11 +190,11 @@ class Huagepage_conf:
         self.hugepage_total_num = total_num
         self.huagepage_size = size
         self.page_num_on_first_numa_node
-        
+
 """
 NUMA related configurations
 """
-    
+
 """
 NUMA related utility functions
 """

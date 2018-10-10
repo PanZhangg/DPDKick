@@ -10,12 +10,26 @@ class CPU_conf:
         self.str_instruction_supported = self.get_CPU_instructions_supported()
         self.cpu_core_total_num = self.get_CPU_cores_total_num()
         self.b_HT_enabled = self.HT_is_enabled()
-        #self.cores = list[]
+        self.cores = []
 
     """
     CPU related utility functions
     """
     
+    def print_lscpu_cmd(self):
+        command = 'lscpu'
+        output = os.popen(command, 'r').read()
+        return output
+
+    def get_lscpu_specific_conf(self, spec):
+        output = self.print_lscpu_cmd()
+        l = output.split('\n')
+        for i in range(len(l)):
+            if (l[i].find(spec) != -1):
+                break;
+        ll = l[i].split(':')[1]
+        return ll.strip()
+
     def get_CPU_code_name(self):
         pass
     
@@ -23,13 +37,15 @@ class CPU_conf:
         pass
     
     def get_CPU_cores_total_num(self):
-        pass
+        output = self.print_lscpu_cmd()
+        num = self.get_lscpu_specific_conf('CPU(s)')
+        return int(num)
     
     def get_CPU_instructions_supported(self):
         pass
     
     
-class CPU_core_conf:
+class single_CPU_core_conf:
     def __init__(self, core_num, numa_node):
         self.core_num = core_num
         self.numa_node = numa_node
@@ -49,7 +65,7 @@ NIC related configurations
 class Single_NIC_conf:
     def __init__(self, code_name, rx_q_num, tx_q_num,
                  numa_node, LnkCap, LnkSta, pci_addr,
-                 drv):
+                 ker_drv):
 
         self.nic_code_name = code_name
         self.rx_queue_num = rx_q_num
@@ -58,7 +74,7 @@ class Single_NIC_conf:
         self.LnkCap = LnkCap
         self.LnkSta = LnkSta
         self.pci_address = pci_addr
-        self.driver_in_use = drv
+        self.ker_drv_in_use = ker_drv
 
 
 class Single_NIC_conf_82599(Single_NIC_conf):
@@ -67,6 +83,12 @@ class Single_NIC_conf_82599(Single_NIC_conf):
     
 class NICs_conf:
     lspci_nic_cmd = 'lspci | grep Ether'
+
+    def __init__(self):
+        self.str_nic_pci_conf= self.print_nic_pci_conf()
+        self.nic_total_num = self.get_nic_total_num()
+        self.nics_conf = []
+        self.init_all_nics_conf()
 
     """
     NIC related utility functions
@@ -90,38 +112,60 @@ class NICs_conf:
         output = self.str_nic_pci_conf.splitlines()[list_num]
         return output[0 : 7]
 
+    def get_lspci_vv_info(self, list_num):
+        pci_addr = self.get_nic_pci_address(list_num)
+        command = 'lspci -s ' + pci_addr + ' -vv'
+        output = os.popen(command, 'r').read()
+        return output
+
     def get_nic_code_name(self, list_num):
         output = self.str_nic_pci_conf.splitlines()[list_num].split(':')[2]
         return output
         
     def get_nic_LnkCap(self, list_num):
-        pci_addr = self.get_nic_pci_address(list_num)
-        command = 'lspci -s ' + pci_addr + ' -vv'
-        output = os.popen(command, 'r').read()
+        output = self.get_lspci_vv_info(list_num)
         loc = output.rfind('LnkCap')
         str_tmp = output[loc :]
         loc = str_tmp.find('Speed')
         return str_tmp[loc + 6 : loc + 11]
     
     def get_nic_LnkSta(self, list_num):
-        pci_addr = self.get_nic_pci_address(list_num)
-        command = 'lspci -s ' + pci_addr + ' -vv'
-        output = os.popen(command, 'r').read()
+        output = self.get_lspci_vv_info(list_num)
         loc = output.find('LnkSta')
         str_tmp = output[loc :]
         loc = str_tmp.find('Speed')
         return str_tmp[loc + 6 : loc + 11]
 
-    def init_single_nic_conf(self):
-        pass
+    def get_nic_numa_node(self, list_num):
+        output = self.get_lspci_vv_info(list_num)
+        loc = output.find('NUMA node')
+        return int(output[loc + 11 : loc + 12])
+        
+
+    def get_nic_ker_drv_in_use(self, list_num):
+        output = self.get_lspci_vv_info(list_num)
+        loc = output.find('Kernel driver in use')
+        str_tmp = output[loc :]
+        return str_tmp[22 : 37]
+
+    def init_single_nic_conf(self, list_num):
+        code_name = self.get_nic_code_name(list_num)
+        numa_node = self.get_nic_numa_node(list_num)
+        LnkCap = self.get_nic_LnkCap(list_num)
+        LnkSta = self.get_nic_LnkSta(list_num)
+        pci_addr = self.get_nic_pci_address(list_num)
+        ker_drv = self.get_nic_ker_drv_in_use(list_num)
+        
+        sig_nic = Single_NIC_conf(code_name = code_name, rx_q_num = 0,
+                                  tx_q_num = 0, numa_node = numa_node,
+                                  LnkCap = LnkCap, LnkSta = LnkSta,
+                                  pci_addr = pci_addr, ker_drv = ker_drv)
+
+        self.nics_conf.append(sig_nic)
 
     def init_all_nics_conf(self):
-        pass
-        
-    def __init__(self):
-        self.str_nic_pci_conf= self.print_nic_pci_conf()
-        self.nic_total_num = self.get_nic_total_num()
-        self.nics_info = dict()
+        for i in range(self.nic_total_num):
+            self.init_single_nic_conf(i)
     
 
 """
@@ -164,5 +208,3 @@ def Hugepage_NUMA_distribution(self):
 
 def NICs_using_DPDK_driver(self):
     pass
-
-

@@ -12,6 +12,8 @@ class hwconftest(unittest.TestCase):
 
     nics = hwutil.NICs_conf()
 
+    cpu = hwutil.CPU_conf()
+
     """
     Verify if NUMA is enabled by BIOS configuration
     """
@@ -25,9 +27,18 @@ class hwconftest(unittest.TestCase):
 
         if (ret == -1):
             NUMA_ENABLED_IN_BIOS = True
-        print self.nics.get_nic_LnkCap(0)
-        print self.nics.get_nic_LnkSta(0)
-        #print self.nics.nic_pci_conf 
+        #self.cpu.get_lscpu_specific_conf('CPU(s)')
+        #print len(self.nics.nics_conf)
+        print self.cpu.cpu_core_total_num
+        
+
+    """
+    Verify DPDK nics' LnkCap and LnkSta are identical
+    """
+    def test_NIC_LnkCap_LnkSta_identical(self):
+        for i in range(self.nics.nic_total_num):
+            nic = self.nics.nics_conf[i]
+            self.assertEqual(nic.LnkCap, nic.LnkSta)
 
     """
     Verify DPDK nics and pinning CPU cores are at the same
@@ -36,11 +47,6 @@ class hwconftest(unittest.TestCase):
     def test_CPU_NIC_on_same_NUMA_node(self):
         pass
 
-    """
-    Verify DPDK nics' LnkCap and LnkSta are identical
-    """
-    def test_NIC_LnkCap_LnkSta_identical(self):
-        pass
 
 if __name__ == '__main__':
     unittest.main()

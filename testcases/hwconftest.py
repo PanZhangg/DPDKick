@@ -1,6 +1,7 @@
 import unittest
 import os
 from utility import hardware as hwutil
+from utility import utilities as util
 
 """
 Testcases related to hardware configuration
@@ -21,15 +22,15 @@ class hwconftest(unittest.TestCase):
         command = 'grep -i numa /var/log/dmesg'
         numa_disable_string = 'No NUMA configuration found'
 
-        output = os.popen(command, 'r')
-        ret = output.read().find(numa_disable_string)
-        self.assertEqual(ret, -1)
+        ret = util.check_if_cmd_output_contains(command, numa_disable_string)
 
-        if (ret == -1):
+        if ret == False:
             NUMA_ENABLED_IN_BIOS = True
-        #self.cpu.get_lscpu_specific_conf('CPU(s)')
-        #print len(self.nics.nics_conf)
+            
+        self.assertEqual(ret, False)
+
         print self.cpu.cpu_core_total_num
+        print self.cpu.hyperthread_is_enabled()
         
 
     """

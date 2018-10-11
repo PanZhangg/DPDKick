@@ -1,4 +1,5 @@
 import os
+import utilities as util
 
 """
 CPU related configurations
@@ -17,18 +18,13 @@ class CPU_conf:
     """
 
     def print_lscpu_cmd(self):
-        command = 'lscpu'
-        output = os.popen(command, 'r').read()
-        return output
+        return util.str_cmd_output('lscpu')
+
+    def print_lscpu_e_cmd(self):
+        return util.str_cmd_output('lscpu -e')
 
     def get_lscpu_specific_conf(self, spec):
-        output = self.print_lscpu_cmd()
-        l = output.split('\n')
-        for i in range(len(l)):
-            if (l[i].find(spec) != -1):
-                break;
-        ll = l[i].split(':')[1]
-        return ll.strip()
+        return util.str_get_specific_value_after_colon('lscpu', spec)
 
     def get_CPU_code_name(self):
         output = self.print_lscpu_cmd()
@@ -38,11 +34,10 @@ class CPU_conf:
     def hyperthread_is_enabled(self):
         output = self.print_lscpu_cmd()
         tpc = self.get_lscpu_specific_conf('Thread(s) per core')
-        if int(tcp) == 1:
+        if int(tpc) == 1:
             return False
-        else
+        else:
             return True
-
 
     def get_CPU_cores_total_num(self):
         output = self.print_lscpu_cmd()
@@ -52,7 +47,7 @@ class CPU_conf:
     def get_CPU_instructions_supported(self):
         pass
 
-class single_CPU_core_conf:
+class Single_CPU_core_conf:
     def __init__(self, core_num, numa_node):
         self.core_num = core_num
         self.numa_node = numa_node

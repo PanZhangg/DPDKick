@@ -9,7 +9,7 @@ def str_cmd_output(cmd):
     return output
 
 def int_cmd_output(cmd):
-    output = self.str_cmd_output(cmd)
+    output = str_cmd_output(cmd)
     return int(output)
 
 def check_if_cmd_output_contains(cmd, str_to_check):

@@ -29,10 +29,6 @@ class hwconftest(unittest.TestCase):
             
         self.assertEqual(ret, False)
 
-        print self.cpu.cpu_core_total_num
-        print self.cpu.hyperthread_is_enabled()
-        
-
     """
     Verify DPDK nics' LnkCap and LnkSta are identical
     """

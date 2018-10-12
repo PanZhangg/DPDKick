@@ -46,6 +46,18 @@ def format_print_launch_screen():
     print ''
     
 def format_print_test_suite_title(title):
-    print '=========================================='
+    print '========================================='
     print title
-    print '=========================================='
+    print '========================================='
+
+"""
+Utilities for reading conf file
+"""
+def check_conf_file_is_completed():
+    return True
+
+def get_dpdk_app_pid():
+    pass
+
+def get_cpu_mask():
+    pass

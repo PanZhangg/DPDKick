@@ -9,9 +9,11 @@ class CPU_conf:
     def __init__(self):
         self.str_CPU_code_name = self.get_CPU_code_name()
         self.str_instruction_supported = self.get_CPU_instructions_supported()
-        self.cpu_core_total_num = self.get_CPU_cores_total_num()
+        self.cpu_total_num = self.get_cpu_total_num()
         self.b_hyperthread_enabled = self.hyperthread_is_enabled()
+        self.cpu_core_total_num = self.get_core_total_num()
         self.cores = []
+        self.init_all_cpus_conf()
 
     """
     CPU related utility functions
@@ -26,6 +28,34 @@ class CPU_conf:
     def get_lscpu_specific_conf(self, spec):
         return util.str_get_specific_value_after_colon('lscpu', spec)
 
+    def get_lscpu_e_specific_conf(self, cpu_id, column):
+        output = self.print_lscpu_e_cmd(); 
+        l = output.split('\n')
+        l_title = l[0].split()
+        ll = l[cpu_id + 1].split()
+        column_idx = l_title.index(column)
+        return ll[column_idx]
+
+    def get_cpu_total_num(self):
+        output = self.print_lscpu_cmd()
+        num = self.get_lscpu_specific_conf('CPU(s)')
+        return int(num)
+
+    def get_cpu_numa_node_by_cpu_id(self, cpu_id):
+        return int(self.get_lscpu_e_specific_conf(cpu_id, 'NODE'))
+
+    def get_cpu_core_by_cpu_id(self, cpu_id):
+        return int(self.get_lscpu_e_specific_conf(cpu_id, 'CORE'))
+
+    def init_all_cpus_conf(self):
+        for i in range(self.cpu_total_num ):
+            core = self.get_cpu_core_by_cpu_id(i)
+            node = self.get_cpu_numa_node_by_cpu_id(i)
+            single_cpu = Single_CPU_core_conf(cpu_id = i,
+                                              core_num = core,
+                                              numa_node = node)
+            self.cores.append(single_cpu)
+
     def get_CPU_code_name(self):
         output = self.print_lscpu_cmd()
         name = self.get_lscpu_specific_conf('Model name')
@@ -39,16 +69,21 @@ class CPU_conf:
         else:
             return True
 
-    def get_CPU_cores_total_num(self):
-        output = self.print_lscpu_cmd()
-        num = self.get_lscpu_specific_conf('CPU(s)')
-        return int(num)
+    def get_core_total_num(self):
+        if self.b_hyperthread_enabled == True:
+            return (self.cpu_total_num / 2)
+        else:
+            return self.cpu_total_num
 
     def get_CPU_instructions_supported(self):
         pass
 
+    def b_intel_pstat_is_disabled(self):
+        pass
+
 class Single_CPU_core_conf:
-    def __init__(self, core_num, numa_node):
+    def __init__(self, cpu_id, core_num, numa_node):
+        self.cpu_id = cpu_id
         self.core_num = core_num
         self.numa_node = numa_node
 

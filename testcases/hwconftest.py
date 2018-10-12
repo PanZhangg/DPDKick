@@ -38,7 +38,7 @@ class hwconftest(unittest.TestCase):
             self.assertEqual(nic.LnkCap, nic.LnkSta)
 
     """
-    Verify DPDK nics and pinning CPU cores are at the same
+    Verify DPDK NICs and pinning CPU cores are at the same
     NUMA node
     """
     def test_CPU_NIC_on_same_NUMA_node(self):

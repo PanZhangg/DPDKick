@@ -1,2 +1,2 @@
 # DPDKick
-Best practice verifier to kick off DPDK applications
+Ultimate DPDK System Enabling Expert

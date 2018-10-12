@@ -6,7 +6,7 @@ class sw_runtime_telemetry():
     def __init__(self):
         process_context_switch_rate = 0
 
-class Software_conf(): 
+class Software_conf():
     def __init__(self):
         pid = 0
         cpu_mask = 0

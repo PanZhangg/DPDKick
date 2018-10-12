@@ -26,7 +26,6 @@ class hwconftest(unittest.TestCase):
 
         if ret == False:
             NUMA_ENABLED_IN_BIOS = True
-            
         self.assertEqual(ret, False)
 
     """

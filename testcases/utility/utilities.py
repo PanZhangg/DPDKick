@@ -44,7 +44,7 @@ def format_print_launch_screen():
     print '| ULTIMATE DPDK SYSTEM ENABLING EXPERT  |'
     print '|#######################################|'
     print ''
-    
+
 def format_print_test_suite_title(title):
     print '========================================='
     print title

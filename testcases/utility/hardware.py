@@ -29,7 +29,7 @@ class CPU_conf:
         return util.str_get_specific_value_after_colon('lscpu', spec)
 
     def get_lscpu_e_specific_conf(self, cpu_id, column):
-        output = self.print_lscpu_e_cmd(); 
+        output = self.print_lscpu_e_cmd();
         l = output.split('\n')
         l_title = l[0].split()
         ll = l[cpu_id + 1].split()
@@ -176,7 +176,10 @@ class NICs_conf:
     def get_nic_numa_node(self, list_num):
         output = self.get_lspci_vv_info(list_num)
         loc = output.find('NUMA node')
-        return int(output[loc + 11 : loc + 12])
+        if loc == -1:
+            return 0
+        else:
+            return int(output[loc + 11 : loc + 12])
 
     def get_nic_ker_drv_in_use(self, list_num):
         output = self.get_lspci_vv_info(list_num)

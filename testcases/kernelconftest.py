@@ -1,9 +1,10 @@
 import unittest
 from utility import kernel as kernelutil
 from utility import utilities as util
+from utility import env as env
 
 class kernelconftest(unittest.TestCase):
-    kernel = kernelutil.Kernel_conf()
+    kernel = env.g_env_conf.kernel
 
     """
     Verify if NMI is disabled
@@ -15,6 +16,12 @@ class kernelconftest(unittest.TestCase):
     Verify if intel_pstat is disabled
     """
     def test_pstat_is_disabled(self):
+        pass
+
+    """
+    Verify hugepage size is 1G
+    """
+    def test_hugepage_size_1G(self):
         pass
 
 if __name__ == '__main__':

@@ -17,4 +17,4 @@ class Kernel_conf():
         pass
 
     def get_writeback_cpumask(self):
-       return util.str_cmd_output('cat /sys/bus/workqueue/devices/writeback/cpumask')
+        return util.str_cmd_output('cat /sys/bus/workqueue/devices/writeback/cpumask')

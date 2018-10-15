@@ -5,7 +5,10 @@ DPDK software related utility functions
 """
 class sw_runtime_telemetry():
     def __init__(self):
-        process_context_switch_rate = 0
+        self.process_context_switch_rate = 0
+
+    def update_all(self):
+        pass
 
 class Software_conf():
     def __init__(self):

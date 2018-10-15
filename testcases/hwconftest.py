@@ -12,7 +12,7 @@ class hwconftest(unittest.TestCase):
     cpu = env.g_env_conf.cpu_conf
 
     """
-    Verify if NUMA is enabled by BIOS configuration
+    Verify if NUMA is enabled
     """
     def test_NUMA_BIOS_enabled(self):
         command = 'grep -i numa /var/log/dmesg'
@@ -23,6 +23,54 @@ class hwconftest(unittest.TestCase):
         if ret == False:
             self.NUMA_ENABLED_IN_BIOS = True
         self.assertEqual(ret, False)
+
+    """
+    Verify if Hyper Thread is disabled
+    """
+    def test_hyper_thread_disabled(self):
+        self.assertEqual(self.cpu.b_hyperthread_enabled, False)
+
+    """
+    Verify if CPU C3 power state is disabled
+    """
+    def test_CPU_C3state_disabled(self):
+        pass
+
+    """
+    Verify if CPU C6 power state is disabled
+    """
+    def test_CPU_C6state_disabled(self):
+        pass
+
+    """
+    Verify if MLC streamer is enabled
+    """
+    def test_CPU_MLC_streamer_enabled(self):
+        pass
+
+    """
+    Verify if MLC spacial prefetcher is enabled
+    """
+    def test_CPU_MLC_spacial_prefetcher_enabled(self):
+        pass
+
+    """
+    Verify if DCU data prefetcher is enabled
+    """
+    def test_CPU_DCU_data_prefetcher_enabled(self):
+        pass
+
+    """
+    Verify if Direct Cache Access is enabled
+    """
+    def test_direct_cache_access_enabled(self):
+        pass
+
+    """
+    Verify if Turbo Boost is disabled
+    """
+    def test_turbo_boost_disabled(self):
+        pass
 
     """
     Verify DPDK nics' LnkCap and LnkSta are identical

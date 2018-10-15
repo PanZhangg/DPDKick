@@ -64,7 +64,6 @@ def get_specific_conf_from_conf_file(conf):
             break
     if l == '':
         print '[Error]: No such configuration'
-    print l
     spec = l.split('=')[1]
     f.close()
     return spec

@@ -95,7 +95,7 @@ class Single_CPU_core_conf:
 Memory related configurations
 """
 
-class memory_conf:
+class Memory_conf:
     def __init__(self, total_num):
         self.memroy_total_num = total_num
 

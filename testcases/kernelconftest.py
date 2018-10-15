@@ -9,7 +9,7 @@ class kernelconftest(unittest.TestCase):
     Verify if NMI is disabled
     """
     def test_nmi_is_disable(self):
-        self.assertEqual(self.kernel.nmi_is_disabled , True)
+        self.assertEqual(self.kernel.nmi_is_disabled, True)
 
     """
     Verify if intel_pstat is disabled

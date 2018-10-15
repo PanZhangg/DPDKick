@@ -1,6 +1,5 @@
 import unittest
 import os
-from utility import hardware as hwutil
 from utility import utilities as util
 from utility import env as env
 
@@ -8,11 +7,8 @@ from utility import env as env
 Testcases related to hardware configuration
 """
 class hwconftest(unittest.TestCase):
-
     NUMA_ENABLED_IN_BIOS = False
-
     nics = env.g_env_conf.nics_conf
-
     cpu = env.g_env_conf.cpu_conf
 
     """

@@ -81,6 +81,9 @@ class CPU_conf:
     def b_intel_pstat_is_disabled(self):
         pass
 
+    def get_single_CPU_conf_by_id(self, id):
+        return self.cores[id]
+
 class Single_CPU_core_conf:
     def __init__(self, cpu_id, core_num, numa_node):
         self.cpu_id = cpu_id

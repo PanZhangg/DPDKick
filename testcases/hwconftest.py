@@ -2,18 +2,18 @@ import unittest
 import os
 from utility import hardware as hwutil
 from utility import utilities as util
+from utility import env as env
 
 """
 Testcases related to hardware configuration
 """
-
 class hwconftest(unittest.TestCase):
 
     NUMA_ENABLED_IN_BIOS = False
 
-    nics = hwutil.NICs_conf()
+    nics = env.g_env_conf.nics_conf
 
-    cpu = hwutil.CPU_conf()
+    cpu = env.g_env_conf.cpu_conf
 
     """
     Verify if NUMA is enabled by BIOS configuration
@@ -25,7 +25,7 @@ class hwconftest(unittest.TestCase):
         ret = util.check_if_cmd_output_contains(command, numa_disable_string)
 
         if ret == False:
-            NUMA_ENABLED_IN_BIOS = True
+            self.NUMA_ENABLED_IN_BIOS = True
         self.assertEqual(ret, False)
 
     """

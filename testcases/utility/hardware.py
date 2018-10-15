@@ -87,6 +87,7 @@ class Single_CPU_core_conf:
         self.core_num = core_num
         self.numa_node = numa_node
 
+
 """
 Memory related configurations
 """

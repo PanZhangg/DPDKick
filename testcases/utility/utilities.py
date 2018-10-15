@@ -56,8 +56,23 @@ Utilities for reading conf file
 def check_conf_file_is_completed():
     return True
 
+def get_specific_conf_from_conf_file(conf):
+    f = open('./dpdkick.conf', 'r')
+    lines = f.read().split('\n')
+    for l in lines:
+        if l.find(conf) != -1:
+            break
+    if l == '':
+        print '[Error]: No such configuration'
+    print l
+    spec = l.split('=')[1]
+    f.close()
+    return spec
+    
 def get_dpdk_app_pid():
-    pass
+    pid = int(get_specific_conf_from_conf_file('dpdk-app-pid'))
+    return pid
 
 def get_cpu_mask():
-    pass
+    mask = get_specific_conf_from_conf_file('dpdk-app-cpu-mask')
+    return mask

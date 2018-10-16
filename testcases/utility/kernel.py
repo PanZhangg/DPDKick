@@ -20,7 +20,7 @@ class Kernel_conf():
             if conf.find(spec) != -1:
                 break
         value = conf.split('=')[1]
-        return value 
+        return value
 
     def get_specifc_grub_conf(self, spec):
         cmdline = self.get_grub_cmdline_conf()

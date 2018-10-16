@@ -17,6 +17,7 @@ class kernelconftest(unittest.TestCase):
     Verify if intel_pstat is disabled
     """
     def test_pstat_is_disabled(self):
+        print util.convert_multipule_str_range_to_int_list('3-7,9-12')
         pass
 
     """

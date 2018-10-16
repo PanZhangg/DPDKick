@@ -11,6 +11,7 @@ class kernelconftest(unittest.TestCase):
     """
     def test_nmi_is_disable(self):
         self.assertEqual(self.kernel.nmi_is_disabled, True)
+        print self.kernel.get_nohz_full_conf()
 
     """
     Verify if intel_pstat is disabled

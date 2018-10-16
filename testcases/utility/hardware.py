@@ -96,8 +96,14 @@ Memory related configurations
 """
 
 class Memory_conf:
-    def __init__(self, total_num):
-        self.memroy_total_num = total_num
+    def __init__(self):
+        self.memroy_total_size = total_size
+
+    """
+    Memory related utility functions
+    """
+    def get_memory_total_size(self):
+        pass
 
 """
 NIC related configurations
@@ -118,9 +124,11 @@ class Single_NIC_conf:
         self.ker_drv_in_use = ker_drv
 
 
+"""
 class Single_NIC_conf_82599(Single_NIC_conf):
     def __init__(self):
         super.__init__(self)
+"""
 
 class NICs_conf:
     lspci_nic_cmd = 'lspci | grep Ether'

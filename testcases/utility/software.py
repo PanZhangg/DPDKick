@@ -26,12 +26,16 @@ class Software_conf():
     def get_cpu_mask(self):
         return util.get_cpu_mask()
 
-    def get_cpu_list_by_mask(self):
-        """
-        TODO
-        """
-        return [1, 3, 5]
-        
+    def get_cpu_list_by_mask(self, cpu_total_num):
+        n = util.convert_cpu_mask_into_int(self.cpu_mask)
+        l = [] 
+        for i in range(cpu_total_num):
+            if n == 0:
+                break
+            if (n & 0x1) == 1:
+                l.append(i)
+            n = n >> 1
+        return l 
 
     def get_sw_threads_num(self):
         pass

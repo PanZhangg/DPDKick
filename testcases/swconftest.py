@@ -28,7 +28,7 @@ class swconftest(unittest.TestCase):
     NUMA node
     """
     def test_CPU_NIC_on_same_NUMA_node(self):
-        cpu_ids = self.sw.get_cpu_list_by_mask()
+        cpu_ids = self.sw.get_cpu_list_by_mask(self.cpu.cpu_core_total_num)
         numa_node_list = []
         for cpu_id in cpu_ids:
             cpu = self.cpu.get_single_CPU_conf_by_id(cpu_id)

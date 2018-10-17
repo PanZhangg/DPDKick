@@ -61,6 +61,22 @@ class kernelconftest(unittest.TestCase):
 
     """
     Verify if masked CPU cores(indicated in dpdk.conf
+    file) are included in rcu_nocbs configuration list
+    """
+    def test_masked_cpu_included_in_rcu_nocbs(self):
+        masked_cpus = self.sw.get_cpu_list_by_mask(self.cpu.cpu_core_total_num)
+        included = True
+        for i in masked_cpus:
+            if i in self.kernel.rcu_nocbs:
+                continue
+            else:
+                included = False
+                break
+
+        self.assertEqual(included, True)
+
+    """
+    Verify if masked CPU cores(indicated in dpdk.conf
     file) are excluded in kthread configuration list
     """
     def test_masked_cpu_excluded_in_kthread(self):
@@ -71,7 +87,7 @@ class kernelconftest(unittest.TestCase):
                 excluded = False
                 break
 
-        self.assertEqual(included, True)
+        self.assertEqual(excluded, True)
 
     """
     Verify if masked CPU cores(indicated in dpdk.conf
@@ -85,7 +101,7 @@ class kernelconftest(unittest.TestCase):
                 excluded = False
                 break
 
-        self.assertEqual(included, True)
+        self.assertEqual(excluded, True)
 
 if __name__ == '__main__':
     unittest.main()

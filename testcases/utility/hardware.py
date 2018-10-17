@@ -11,6 +11,7 @@ class CPU_conf:
         self.str_instruction_supported = self.get_CPU_instructions_supported()
         self.cpu_total_num = self.get_cpu_total_num()
         self.b_hyperthread_enabled = self.hyperthread_is_enabled()
+        self.b_turbo_disabled = self.turbo_is_disabled()
         self.cpu_core_total_num = self.get_core_total_num()
         self.cores = []
         self.init_all_cpus_conf()
@@ -68,6 +69,9 @@ class CPU_conf:
             return False
         else:
             return True
+
+    def turbo_is_disabled(self):
+        return False
 
     def get_core_total_num(self):
         if self.b_hyperthread_enabled == True:

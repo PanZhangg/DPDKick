@@ -70,7 +70,7 @@ class hwconftest(unittest.TestCase):
     Verify if Turbo Boost is disabled
     """
     def test_turbo_boost_disabled(self):
-        pass
+        self.assertEqual(self.cpu.b_turbo_disabled, True)
 
     """
     Verify DPDK nics' LnkCap and LnkSta are identical

@@ -103,3 +103,6 @@ def get_dpdk_app_pid():
 def get_cpu_mask():
     mask = get_specific_conf_from_conf_file('dpdk-app-cpu-mask')
     return mask
+
+def convert_cpu_mask_into_int_lists(mask):
+    pass

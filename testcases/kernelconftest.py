@@ -10,20 +10,47 @@ class kernelconftest(unittest.TestCase):
     Verify if NMI is disabled
     """
     def test_nmi_is_disable(self):
+        print self.kernel.__dict__
         self.assertEqual(self.kernel.nmi_is_disabled, True)
-        print self.kernel.get_nohz_full_conf()
 
     """
     Verify if intel_pstat is disabled
     """
     def test_pstat_is_disabled(self):
-        print util.convert_multipule_str_range_to_int_list('3-7,9-12')
         pass
 
     """
     Verify hugepage size is 1G
     """
     def test_hugepage_size_1G(self):
+        pass
+
+    """
+    Verify if masked CPU cores(indicated in dpdk.conf
+    file) are included in isolcpus configuration list
+    """
+    def test_masked_cpu_included_in_ioslcpus(self):
+        pass
+
+    """
+    Verify if masked CPU cores(indicated in dpdk.conf
+    file) are included in nohz_full configuration list
+    """
+    def test_masked_cpu_included_in_nohz_full(self):
+        pass
+
+    """
+    Verify if masked CPU cores(indicated in dpdk.conf
+    file) are excluded in kthread configuration list
+    """
+    def test_masked_cpu_excluded_in_kthread(self):
+        pass
+
+    """
+    Verify if masked CPU cores(indicated in dpdk.conf
+    file) are excluded in irqaffinity configuration list
+    """
+    def test_masked_cpu_excluded_in_irqaffinity(self):
         pass
 
 if __name__ == '__main__':

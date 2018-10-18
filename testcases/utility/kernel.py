@@ -5,13 +5,13 @@ class Kernel_conf():
         self.iommu_conf = ''
         self.nmi_is_disabled = self.b_nmi_is_disabled()
         self.wb_cpumask = self.get_writeback_cpumask()
-        self.nohz_full = self.get_nohz_full_conf()
-        self.isolcpus = self.get_isolcpus_conf()
-        self.kthread_cpus = self.get_kthread_cpus()
-        self.irqaffinity = self.get_irqaffinity()
-        self.rcu_nocbs = self.get_rcu_nocbs()
+        self.nohz_full = self.__get_nohz_full_conf()
+        self.isolcpus = self.__get_isolcpus_conf()
+        self.kthread_cpus = self.__get_kthread_cpus()
+        self.irqaffinity = self.__get_irqaffinity()
+        self.rcu_nocbs = self.__get_rcu_nocbs()
 
-        self.hugepage_mem_size = self.get_hugepage_mem_size()
+        self.hugepage_mem_size = self.__get_hugepage_mem_size()
 
     def __get_grub_cmdline_conf(self):
         output = util.str_cmd_output('cat /etc/default/grub')
@@ -43,27 +43,27 @@ class Kernel_conf():
     def get_intel_iommu_conf(self):
         return self.__get_specific_grub_conf('intel_iommu');
 
-    def get_isolcpus_conf(self):
+    def __get_isolcpus_conf(self):
         l = self.__get_specific_grub_conf('isolcpus');
         return util.convert_multipule_str_range_to_int_list(l)
 
-    def get_nohz_full_conf(self):
+    def __get_nohz_full_conf(self):
         l = self.__get_specific_grub_conf('nohz_full');
         return util.convert_multipule_str_range_to_int_list(l)
 
-    def get_kthread_cpus(self):
+    def __get_kthread_cpus(self):
         l = self.__get_specific_grub_conf('kthread_cpus');
         return util.convert_multipule_str_range_to_int_list(l)
 
-    def get_irqaffinity(self):
+    def __get_irqaffinity(self):
         l = self.__get_specific_grub_conf('irqaffinity');
         return util.convert_multipule_str_range_to_int_list(l)
 
-    def get_rcu_nocbs(self):
+    def __get_rcu_nocbs(self):
         l = self.__get_specific_grub_conf('rcu_nocbs');
         return util.convert_multipule_str_range_to_int_list(l)
 
-    def get_hugepage_mem_size(self):
+    def __get_hugepage_mem_size(self):
         command = 'cat /proc/meminfo'
         size = util.str_get_specific_value_after_colon(command, 'Hugepagesize')
         return size

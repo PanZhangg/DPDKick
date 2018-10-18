@@ -14,18 +14,22 @@ class sw_runtime_telemetry():
 
 class Software_conf():
     def __init__(self):
-        self.pid = self.get_sw_pid()
-        self.cpu_mask = self.get_cpu_mask()
-        self.thread_num = 0
+        self.pid = self.__get_sw_pid()
+        self.cpu_mask = self.__get_cpu_mask()
+        self.thread_num = self.__get_sw_threads_num(self.pid)
 
     """
     Software PID is read from file dpdkick.conf
     TODO: Automatic detect from the env
     """
-    def get_sw_pid(self):
+    def __get_sw_pid(self):
         return util.get_dpdk_app_pid()
 
-    def get_cpu_mask(self):
+    """
+    Software cpu mask for pinning workload to
+    certain cpu cores is read from file dpdkick.conf
+    """
+    def __get_cpu_mask(self):
         return util.get_cpu_mask()
 
     def get_cpu_list_by_mask(self, cpu_total_num):
@@ -39,5 +43,11 @@ class Software_conf():
             n = n >> 1
         return l 
 
-    def get_sw_threads_num(self):
-        pass
+    def __get_sw_threads_num(self, pid):
+        command = 'ps -o nlwp ' + str(pid)
+        output = util.str_cmd_output(command)
+        l = output.split('\n')[1]
+        if l == '':
+            print 'Bad PID'
+            raise SystemExit
+        return int(l)

@@ -22,7 +22,7 @@ class kernelconftest(unittest.TestCase):
         pass
 
     """
-    Verify hugepage size is 1G
+    Verify hugepage size is 1GB
     """
     def test_hugepage_size_1G(self):
         self.assertEqual(self.kernel.hugepage_mem_size, '1048576 kB')

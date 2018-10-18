@@ -25,7 +25,7 @@ class kernelconftest(unittest.TestCase):
     Verify hugepage size is 1G
     """
     def test_hugepage_size_1G(self):
-        pass
+        self.assertEqual(self.kernel.hugepage_mem_size, '1048576 kB')
 
     """
     Verify if masked CPU cores(indicated in dpdk.conf

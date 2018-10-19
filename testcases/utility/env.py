@@ -9,6 +9,7 @@ class env():
         self.sw_conf = swutil.Software_conf()
         self.rt_telemetry = swutil.sw_runtime_telemetry()
         self.kernel = kernelutil.Kernel_conf()
+        self.hugepage_mem = kernelutil.Huagepage_conf()
 
     def rt_telemetry_update_all(self):
         self.rt_telemetry.update_all()

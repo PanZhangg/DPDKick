@@ -7,12 +7,13 @@ class kernelconftest(unittest.TestCase):
     cpu = env.g_env_conf.cpu_conf
     sw = env.g_env_conf.sw_conf
     kernel = env.g_env_conf.kernel
+    hugepage_mem = env.g_env_conf.hugepage_mem
 
     """
     Verify if NMI is disabled
     """
     def test_nmi_is_disable(self):
-        print self.kernel.__dict__
+        #print self.kernel.__dict__
         self.assertEqual(self.kernel.nmi_is_disabled, True)
 
     """
@@ -25,12 +26,13 @@ class kernelconftest(unittest.TestCase):
     Verify hugepage size is 1GB
     """
     def test_hugepage_size_1G(self):
-        self.assertEqual(self.kernel.hugepage_mem_size, '1048576 kB')
+        self.assertEqual(self.hugepage_mem.hugepage_mem_size , '1048576 kB')
 
     """
     Verify if masked CPU cores(indicated in dpdk.conf
     file) are included in isolcpus configuration list
     """
+    @unittest.skipIf(kernel.isolcpus == '', "No isolcpus configuration in grub")
     def test_masked_cpu_included_in_ioslcpus(self):
         masked_cpus = self.sw.get_cpu_list_by_mask(self.cpu.cpu_core_total_num)
         included = True
@@ -47,6 +49,7 @@ class kernelconftest(unittest.TestCase):
     Verify if masked CPU cores(indicated in dpdk.conf
     file) are included in nohz_full configuration list
     """
+    @unittest.skipIf(kernel.nohz_full == '', "No nohz_full configuration in grub")
     def test_masked_cpu_included_in_nohz_full(self):
         masked_cpus = self.sw.get_cpu_list_by_mask(self.cpu.cpu_core_total_num)
         included = True
@@ -63,6 +66,7 @@ class kernelconftest(unittest.TestCase):
     Verify if masked CPU cores(indicated in dpdk.conf
     file) are included in rcu_nocbs configuration list
     """
+    @unittest.skipIf(kernel.rcu_nocbs == '', "No rcu_nocbs configuration in grub")
     def test_masked_cpu_included_in_rcu_nocbs(self):
         masked_cpus = self.sw.get_cpu_list_by_mask(self.cpu.cpu_core_total_num)
         included = True
@@ -79,6 +83,7 @@ class kernelconftest(unittest.TestCase):
     Verify if masked CPU cores(indicated in dpdk.conf
     file) are excluded in kthread configuration list
     """
+    @unittest.skipIf(kernel.kthread_cpus == '', "No kthread_cpus configuration in grub")
     def test_masked_cpu_excluded_in_kthread(self):
         masked_cpus = self.sw.get_cpu_list_by_mask(self.cpu.cpu_core_total_num)
         excluded = True
@@ -93,6 +98,7 @@ class kernelconftest(unittest.TestCase):
     Verify if masked CPU cores(indicated in dpdk.conf
     file) are excluded in irqaffinity configuration list
     """
+    @unittest.skipIf(kernel.irqaffinity == '', "No irqaffinity configuration in grub")
     def test_masked_cpu_excluded_in_irqaffinity(self):
         masked_cpus = self.sw.get_cpu_list_by_mask(self.cpu.cpu_core_total_num)
         excluded = True

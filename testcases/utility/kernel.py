@@ -28,9 +28,14 @@ class Kernel_conf():
 
     def __get_specific_conf_from_grub_cmdline(self, cmdline, spec):
         confs = cmdline.split(' ')
+        found = False
         for conf in confs:
             if conf.find(spec) != -1:
+                found = True
                 break
+        if found == False:
+            print 'No ' + spec + ' in ' + cmdline
+            return ''
         value = conf.split('=')[1]
         return value
 

@@ -4,6 +4,7 @@ from testcases import hwconftest
 from testcases import swconftest
 from testcases import kernelconftest
 from testcases.utility import utilities as util
+import globalvar
 
 def dpdkick_main():
     util.format_print_launch_screen()

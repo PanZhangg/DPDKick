@@ -1,0 +1,1 @@
+CONF_PID_IS_VALID=True

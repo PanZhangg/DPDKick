@@ -2,12 +2,15 @@ import unittest
 from utility import utilities as util
 from utility import env as env
 import hwconftest as hwconf
+import globalvar
 
 """
 Testcases related to software configuration
 and runtime env variables
 """
 
+@unittest.skipIf(globalvar.CONF_PID_IS_VALID == False,
+                 "PID in dpdk.conf is invalid")
 class swconftest(unittest.TestCase):
 
     cpu = env.g_env_conf.cpu_conf

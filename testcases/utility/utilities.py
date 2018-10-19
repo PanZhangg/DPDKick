@@ -50,12 +50,15 @@ Convert number range string like '3-7,9-12' to
 int list[3, 4, 5, 6, 7, 9, 10, 11, 12]
 """
 def convert_multipule_str_range_to_int_list(range_str):
-    l = range_str.split(',')
-    num_list = []
-    for ll in l:
-        n_l = convert_str_range_to_int_list(ll)
-        num_list = num_list + n_l
-    return num_list
+    if range_str == '':
+        return ''
+    else:
+        l = range_str.split(',')
+        num_list = []
+        for ll in l:
+            n_l = convert_str_range_to_int_list(ll)
+            num_list = num_list + n_l
+        return num_list
 
 """
 Utilities for formatted printing

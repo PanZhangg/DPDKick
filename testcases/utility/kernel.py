@@ -1,5 +1,9 @@
 import utilities as util
 
+
+"""
+Kernel related configurations
+"""
 class Kernel_conf():
     def __init__(self):
         self.iommu_conf = ''
@@ -11,8 +15,9 @@ class Kernel_conf():
         self.irqaffinity = self.__get_irqaffinity()
         self.rcu_nocbs = self.__get_rcu_nocbs()
 
-        self.hugepage_mem_size = self.__get_hugepage_mem_size()
-
+    """
+    Kernel related utility functions
+    """
     def __get_grub_cmdline_conf(self):
         output = util.str_cmd_output('cat /etc/default/grub')
         lines = output.split('\n')
@@ -63,10 +68,34 @@ class Kernel_conf():
         l = self.__get_specific_grub_conf('rcu_nocbs');
         return util.convert_multipule_str_range_to_int_list(l)
 
+    def get_writeback_cpumask(self):
+        return util.str_cmd_output('cat /sys/bus/workqueue/devices/writeback/cpumask')
+
+
+"""
+Huagepage related configurations
+"""
+class Huagepage_conf:
+
+    def __init__(self):
+        self.hugepage_total_num = self.__get_hugepage_total_num()
+        self.hugepage_free_num = self.__get_huagepage_free_num()
+        self.hugepage_mem_size = self.__get_hugepage_mem_size()
+
+    """
+    Huagepage related utility functions
+    """
+    def __get_huagepage_free_num(self):
+        command = 'cat /proc/meminfo'
+        n = util.str_get_specific_value_after_colon(command, 'HugePages_Free')
+        return int(n)
+
     def __get_hugepage_mem_size(self):
         command = 'cat /proc/meminfo'
         size = util.str_get_specific_value_after_colon(command, 'Hugepagesize')
         return size
 
-    def get_writeback_cpumask(self):
-        return util.str_cmd_output('cat /sys/bus/workqueue/devices/writeback/cpumask')
+    def __get_hugepage_total_num(self):
+        command = 'cat /proc/meminfo'
+        n = util.str_get_specific_value_after_colon(command, 'HugePages_Total')
+        return int(n)

@@ -101,13 +101,15 @@ Memory related configurations
 
 class Memory_conf:
     def __init__(self):
-        self.memroy_total_size = total_size
+        self.memroy_total_size = self.__get_memory_total_size()
 
     """
     Memory related utility functions
     """
-    def get_memory_total_size(self):
-        pass
+    def __get_memory_total_size(self):
+        cmd = 'cat /proc/meminfo'
+        total = util.str_get_specific_value_after_colon(cmd, 'MemTotal')
+        return total
 
 """
 NIC related configurations
@@ -221,44 +223,3 @@ class NICs_conf:
     def init_all_nics_conf(self):
         for i in range(self.nic_total_num):
             self.init_single_nic_conf(i)
-
-"""
-Huagepage related configurations
-"""
-class Huagepage_conf:
-    """
-    Huagepage related utility functions
-    """
-    def Huagepage_size(self):
-        pass
-
-    def Huagepage_num(self):
-        pass
-
-    def __init__(self, total_num, size):
-        self.hugepage_total_num = total_num
-        self.huagepage_size = size
-        self.page_num_on_first_numa_node
-
-"""
-NUMA related configurations
-"""
-
-"""
-NUMA related utility functions
-"""
-
-def CPU_cores_NUMA_distribution(self):
-    pass
-
-def memory_NUMA_distribution(self):
-    pass
-
-def NIC_NUMA_distribution(self):
-    pass
-
-def Hugepage_NUMA_distribution(self):
-    pass
-
-def NICs_using_DPDK_driver(self):
-    pass

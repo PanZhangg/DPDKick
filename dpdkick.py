@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 import unittest
 from testcases import hwconftest
 from testcases import swconftest

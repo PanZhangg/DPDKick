@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import unittest
+import TestRunner
 from testcases import hwconftest
 from testcases import swconftest
 from testcases import kernelconftest
@@ -18,14 +19,16 @@ def dpdkick_main():
     sw_conf_test_suite = unittest.TestLoader().loadTestsFromTestCase(swconftest.swconftest)
     kernel_conf_test_suite = unittest.TestLoader().loadTestsFromTestCase(kernelconftest.kernelconftest)
 
+    runner = TestRunner.TestRunner()
+
     util.format_print_test_suite_title('Hardware Configuration Verification')
-    unittest.TextTestRunner(verbosity=2).run(hw_conf_test_suite)
+    runner.run(hw_conf_test_suite)
 
     util.format_print_test_suite_title('Kernel Configuration Verification')
-    unittest.TextTestRunner(verbosity=2).run(kernel_conf_test_suite)
+    runner.run(kernel_conf_test_suite)
 
     util.format_print_test_suite_title('Software Configuration and Runtime Verification')
-    unittest.TextTestRunner(verbosity=2).run(sw_conf_test_suite)
+    runner.run(sw_conf_test_suite)
 
 if __name__ == '__main__':
     dpdkick_main()

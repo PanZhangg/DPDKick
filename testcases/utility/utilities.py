@@ -65,7 +65,7 @@ Utilities for formatted printing
 """
 
 def format_print_launch_screen():
-    print '|#######################################|'
+    print '\33[1;32m|#######################################|'
     print '|    ____  ____  ____  __ __ _      __  |'
     print '|   / __ \/ __ \/ __ \/ //_/(_)____/ /__|'
     print '|  / / / / /_/ / / / / ,<  / / ___/ //_/|'
@@ -73,13 +73,13 @@ def format_print_launch_screen():
     print '|/_____/_/   /_____/_/ |_/_/\___/_/|_|  |'
     print '|                                       |'
     print '| ULTIMATE DPDK SYSTEM ENABLING EXPERT  |'
-    print '|#######################################|'
+    print '|#######################################|\33[0m'
     print ''
 
 def format_print_test_suite_title(title):
-    print '========================================='
+    print '\33[1;34m==================================================='
     print title
-    print '========================================='
+    print '===================================================\33[0m'
 
 """
 Utilities for reading conf file

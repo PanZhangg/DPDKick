@@ -61,11 +61,11 @@ stdout_redirector = OutputRedirector(sys.stdout)
 stderr_redirector = OutputRedirector(sys.stderr)
 
 class Table(object):
-        
-    def __init__(self, padding='', allow_newlines=False):   
+
+    def __init__(self, padding='', allow_newlines=False):
         self.__columnSize__ =  []
         self.__rows__ = []
-        self.__titles__ = None 
+        self.__titles__ = None
         self.padding = padding
         self.allow_newlines=allow_newlines
 
@@ -74,10 +74,10 @@ class Table(object):
 
     def addRow(self, row):
         rows = [[''] for l in range(len(row))]
-        maxrows = 1 
+        maxrows = 1
         for i, x in enumerate(row):
             for j, y in enumerate(x.split("\n")):
-                if len(y) == 0 and self.allow_newlines == False: 
+                if len(y) == 0 and self.allow_newlines == False:
                     continue
                 try:
                     self.__columnSize__[i] = max(self.__columnSize__[i], self.__len__(y))
@@ -109,7 +109,7 @@ class Table(object):
             if len(self.__titles__) < len(self.__columnSize__):
                 self.__titles__ += ((len(self.__columnSize__)-len(self.__titles__))*[''])
             for i, x in enumerate(self.__titles__):
-                self.__titles__[i] = x.center(self.__columnSize__[i]) 
+                self.__titles__[i] = x.center(self.__columnSize__[i])
             title = self.padding+"| "+" | ".join(self.__titles__)+" |\n"+hline+"\n"
         for x in self.__rows__:
             if len(x) < len(self.__columnSize__):
@@ -123,8 +123,8 @@ class bcolors(object):
     FORMAT = {
         'Regular' : '0',
         'Bold' : '1',
-        'Underline' : '4', 
-        'High Intensity' : '0', # +60 on color 
+        'Underline' : '4',
+        'High Intensity' : '0', # +60 on color
         'BoldHighIntensity' : '1',  # +60 on color
     }
     START = "\033["
@@ -143,7 +143,7 @@ class bcolors(object):
     def __getattr__(self, name):
         def handlerFunction(*args, **kwargs):
             return self.START+self.FORMAT['Regular']+";"+self.COLOR[name.lower()]
-        return handlerFunction(name=name) 
+        return handlerFunction(name=name)
 # ----------------------------------------------------------------------
 # Template
 
@@ -154,6 +154,7 @@ class Template_mixin(object):
         0: bc.GREEN+'pass'+bc.END,
         1: bc.PURPLE+'fail'+bc.END,
         2: bc.RED+'error'+bc.END,
+        3: bc.BLUE+'skip'+bc.END,
     }
 
     # ------------------------------------------------------------------------
@@ -162,7 +163,7 @@ class Template_mixin(object):
 
     REPORT_TEST_WITH_OUTPUT_TMPL = r"""
    %(desc)s
-    
+
         %(status)s
 
         %(script)s
@@ -196,11 +197,12 @@ class _TestResult(TestResult):
         self.success_count = 0
         self.failure_count = 0
         self.error_count = 0
+        self.skip_count = 0
         self.verbosity = verbosity
 
         # result is a list of result in 4 tuple
         # (
-        #   result code (0: success; 1: fail; 2: error),
+        #   result code (0: success; 1: fail; 2: error 3:skip),
         #   TestCase object,
         #   Test output (byte string),
         #   stack trace,
@@ -278,6 +280,19 @@ class _TestResult(TestResult):
         else:
             pass #sys.stderr.write('F')
 
+    def addSkip(self, test, err):
+        self.skip_count += 1
+        TestResult.addSkip(self, test, err)
+        _, _exc_str = self.skipped[-1]
+        output = self.complete_output()
+        self.result.append((3, test, output, _exc_str))
+        if self.verbosity > 1:
+            sys.stderr.write('S  ')
+            sys.stderr.write(str(test))
+            sys.stderr.write('\n')
+        else:
+            pass #sys.stderr.write('F')
+
 
 class TestRunner(Template_mixin):
     """
@@ -343,6 +358,8 @@ class TestRunner(Template_mixin):
             status.append(padding+self.bc.PURPLE+'Failure:'+self.bc.END+' %s\n' % result.failure_count)
         if result.error_count:
             status.append(padding+self.bc.RED+'Error:'+self.bc.END+' %s\n'   % result.error_count  )
+        if result.skip_count:
+            status.append(padding+self.bc.BLUE+'Skip:'+self.bc.END+' %s\n'   % result.skip_count  )
         if status:
             status = '\n'+''.join(status)
         else:
@@ -381,8 +398,8 @@ class TestRunner(Template_mixin):
         sortedResult = self.sortResult(result.result)
         padding = 4 * ' '
         table = Table(padding=padding)
-        table.addTitles(["Test group/Test case", "Count", "Pass", "Fail", "Error"])
-        tests = '' 
+        table.addTitles(["Test group/Test case", "Count", "Pass", "Fail", "Error", "Skip"])
+        tests = ''
         for cid, (testClass, classResults) in enumerate(sortedResult): # Iterate over the test cases
             classTable = Table(padding=2*padding)
             classTable.addTitles(["Test name", "Stack", "Status"])
@@ -407,7 +424,8 @@ class TestRunner(Template_mixin):
             for tid, (n,test,output,error) in enumerate(classResults): # Iterate over the unit tests
                 classTable.addRow(self._generate_report_test(cid, tid, n, test, output, error))
             tests += str(classTable)
-        table.addRow(["Total", str(result.success_count+result.failure_count+result.error_count), str(result.success_count), str(result.failure_count), str(result.error_count)])   
+        table.addRow(["Total", str(result.success_count+result.failure_count+result.error_count+result.skip_count), str(result.success_count), str(result.failure_count), str(result.error_count),
+            str(result.skip_count)])
         report = self.bc.CYAN+"Summary: "+self.bc.END+"\n"+str(table)+tests
         return report
 
@@ -436,7 +454,7 @@ class TestRunner(Template_mixin):
             try:
                 ue = error.decode('latin-1')
             except AttributeError:
-                ue = error 
+                ue = error
         else:
             ue = error
 

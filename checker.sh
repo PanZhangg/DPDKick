@@ -138,11 +138,9 @@ dmidecode -t 17 | grep -C 7 'Size: [0-9]' | awk -F: '{
         s_id=$2;
         arr[s_id]=arr[s_id] "\t" p_id
     } else if ($1 ~ /Speed/){
-		gsub(/ /,"",$2);
-		
-		arr[s_id]=arr[s_id]"("$2")"
-	}
-	
+        gsub(/ /,"",$2);
+        arr[s_id]=arr[s_id]"("$2")"
+    }	
 }
 END{
     for (i in arr)

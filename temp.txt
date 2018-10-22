@@ -1,0 +1,127 @@
+
+Handle 0x0022, DMI type 17, 40 bytes
+Memory Device
+	Array Handle: 0x0020
+	Error Information Handle: Not Provided
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 16384 MB
+	Form Factor: DIMM
+	Set: None
+	Locator: DIMM_A1
+	Bank Locator: NODE 1
+	Type: DDR4
+	Type Detail: Synchronous
+	Speed: 2133 MHz
+--
+
+Handle 0x0026, DMI type 17, 40 bytes
+Memory Device
+	Array Handle: 0x0020
+	Error Information Handle: Not Provided
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 16384 MB
+	Form Factor: DIMM
+	Set: None
+	Locator: DIMM_B1
+	Bank Locator: NODE 1
+	Type: DDR4
+	Type Detail: Synchronous
+	Speed: 2133 MHz
+--
+
+Handle 0x002C, DMI type 17, 40 bytes
+Memory Device
+	Array Handle: 0x002A
+	Error Information Handle: Not Provided
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 16384 MB
+	Form Factor: DIMM
+	Set: None
+	Locator: DIMM_C1
+	Bank Locator: NODE 1
+	Type: DDR4
+	Type Detail: Synchronous
+	Speed: 2133 MHz
+--
+
+Handle 0x0030, DMI type 17, 40 bytes
+Memory Device
+	Array Handle: 0x002A
+	Error Information Handle: Not Provided
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 16384 MB
+	Form Factor: DIMM
+	Set: None
+	Locator: DIMM_D1
+	Bank Locator: NODE 1
+	Type: DDR4
+	Type Detail: Synchronous
+	Speed: 2133 MHz
+--
+
+Handle 0x0036, DMI type 17, 40 bytes
+Memory Device
+	Array Handle: 0x0034
+	Error Information Handle: Not Provided
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 16384 MB
+	Form Factor: DIMM
+	Set: None
+	Locator: DIMM_E1
+	Bank Locator: NODE 2
+	Type: DDR4
+	Type Detail: Synchronous
+	Speed: 2133 MHz
+--
+
+Handle 0x003A, DMI type 17, 40 bytes
+Memory Device
+	Array Handle: 0x0034
+	Error Information Handle: Not Provided
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 16384 MB
+	Form Factor: DIMM
+	Set: None
+	Locator: DIMM_F1
+	Bank Locator: NODE 2
+	Type: DDR4
+	Type Detail: Synchronous
+	Speed: 2133 MHz
+--
+
+Handle 0x0040, DMI type 17, 40 bytes
+Memory Device
+	Array Handle: 0x003E
+	Error Information Handle: Not Provided
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 16384 MB
+	Form Factor: DIMM
+	Set: None
+	Locator: DIMM_G1
+	Bank Locator: NODE 2
+	Type: DDR4
+	Type Detail: Synchronous
+	Speed: 2133 MHz
+--
+
+Handle 0x0044, DMI type 17, 40 bytes
+Memory Device
+	Array Handle: 0x003E
+	Error Information Handle: Not Provided
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 16384 MB
+	Form Factor: DIMM
+	Set: None
+	Locator: DIMM_H1
+	Bank Locator: NODE 2
+	Type: DDR4
+	Type Detail: Synchronous
+	Speed: 2133 MHz

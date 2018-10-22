@@ -71,14 +71,14 @@ else
 fi
 
 tabs 6
-echo -e "\033[47;34mthreads on per isolated cores:\033[0m"
+echo -e "\033[47;34mthreads on per cores:\033[0m"
 num=$nr_cores
 echo -e 'core id\t\tthreads'
-while [ "$num" -gt 0 ]
-do
-    echo -e core[$num]'\t\t'$(ps -eLo ruser,pid,ppid,lwp,psr,args | awk '{if($5=='$num') print $0}' | wc -l)
-    let "num--"
-done
+#while [ "$num" -gt 0 ]
+#do
+#    echo -e core[$num]'\t\t'$(ps -eLo ruser,pid,ppid,lwp,psr,args | awk '{if($5=='$num') print $0}' | wc -l)
+#    let "num--"
+#done
 
 echo
 echo -e '=====\t\tFeatures\t\t====='
@@ -121,7 +121,35 @@ else
     echo $(grep -i 'Hugepages_free' /proc/meminfo)
 fi
 echo
+echo -e "\033[47;34mboard information\033[0m"
+echo $(dmidecode -t 2 | grep -A 5 'Base Board Information')
+echo
+echo -e "\033[47;34mmemory physical layout\033[0m"
+dmidecode -t 16 | grep -A 6 'Physical Memory Array'
+echo
+echo -e "\033[47;34mavailable memory dimm\033[0m"
+#dmidecode -t 17 | grep -C 7 'Size: [0-9]'
+dmidecode -t 17 | grep -C 7 'Size: [0-9]' | awk -F: '{
+    if ($2 ~ /DIMM_/) {
+        gsub(/ /,"",$2);
+        p_id=$2;
+    } else if ($1 ~ /Bank Locator/){
+        gsub(/ /,"",$2);
+        s_id=$2;
+        arr[s_id]=arr[s_id] "\t" p_id
+    } else if ($1 ~ /Speed/){
+		gsub(/ /,"",$2);
+		
+		arr[s_id]=arr[s_id]"("$2")"
+	}
+	
+}
+END{
+    for (i in arr)
+        printf "Memory %s:%s\n", i, arr[i];
+}'
 echo -e "\033[44;30m**********NIC pre-flight**********\033[0m"
+echo
 echo -e '=====\t\tNIC Cap and DPDK-Support checking\t\t====='
 #refer to command below to generate dpdk supported device id(supported_nic_dev_id) based on actual envioroment:
 #cd $DPDK_FOLDER

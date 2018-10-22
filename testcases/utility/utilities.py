@@ -77,6 +77,7 @@ def format_print_launch_screen():
     print ''
 
 def format_print_test_suite_title(title):
+    print ''
     print '\33[1;34m==================================================='
     print title
     print '===================================================\33[0m'

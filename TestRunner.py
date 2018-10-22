@@ -286,11 +286,11 @@ class TestRunner(Template_mixin):
         self.stream = stream
         self.verbosity = verbosity
         if title is None:
-            self.title = 'Unit Test Report'
+            self.title = '\33[1mDPDKick Testsuite Report\33[0m'
         else:
             self.title = title
         if description is None:
-            self.description = '' 
+            self.description = ''
         else:
             self.description = description
 
@@ -299,12 +299,16 @@ class TestRunner(Template_mixin):
 
 
 
-    def run(self, test):
+    def run(self, test, description):
         "Run the given test case or test suite."
+        if description == None:
+            arg_desc = ''
+        else:
+            arg_desc = description
         result = _TestResult(self.verbosity)
         test(result)
         self.stopTime = datetime.datetime.now()
-        self.generateReport(test, result)
+        self.generateReport(test, result, arg_desc)
         #print >> sys.stderr, '\nTime Elapsed: %s' % (self.stopTime-self.startTime)
         return result
 
@@ -350,9 +354,9 @@ class TestRunner(Template_mixin):
         ]
 
 
-    def generateReport(self, test, result):
+    def generateReport(self, test, result, description):
         report_attrs = self.getReportAttributes(result)
-        heading = self._generate_heading(report_attrs)
+        heading = self._generate_heading(report_attrs, description)
         report = self._generate_report(result)
         output = self.title.rjust(30) +"\n" + \
         heading + \
@@ -362,13 +366,13 @@ class TestRunner(Template_mixin):
         except TypeError:
             self.stream.write(output)
 
-    def _generate_heading(self, report_attrs):
+    def _generate_heading(self, report_attrs, description):
         a_lines = []
         for name, value in report_attrs:
             line = self.bc.CYAN+name+": "+self.bc.END+value+"\n"
         a_lines.append(line)
         heading = ''.join(a_lines)+ \
-        self.bc.CYAN+"Description:"+self.bc.END+self.description+"\n"
+        self.bc.CYAN+"Description:"+self.bc.END+description+"\n"
         return heading
 
 

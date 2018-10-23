@@ -24,11 +24,11 @@ def dpdkick_main():
     util.format_print_test_suite_title('Hardware Configuration Verification')
     runner.run(hw_conf_test_suite, description = 'Hardware')
 
-    util.format_print_test_suite_title('Kernel Configuration Verification')
-    runner.run(kernel_conf_test_suite, description = 'Kernel')
-
     util.format_print_test_suite_title('Software Configuration and Runtime Verification')
     runner.run(sw_conf_test_suite, description = 'Software')
+
+    util.format_print_test_suite_title('Kernel Configuration Verification')
+    runner.run(kernel_conf_test_suite, description = 'Kernel')
 
 if __name__ == '__main__':
     dpdkick_main()

@@ -80,7 +80,7 @@ class Kernel_conf():
             return ''
 
     def __get_iommu_pt(self):
-        l = self.__get_specific_grub_conf('iommu_pt');
+        l = self.__get_specific_grub_conf('iommu');
         if l is not None:
             return True
         else:

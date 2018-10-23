@@ -109,5 +109,17 @@ class kernelconftest(unittest.TestCase):
 
         self.assertEqual(excluded, True)
 
+    """
+    Verify intel_iommu=on is configured in grub
+    """
+    def test_intel_iommu_on(self):
+        self.assertEqual(self.kernel.intel_iommu, 'on')
+
+    """
+    Verify iommu=pt is configured in grub
+    """
+    def test_iommu_pt_is_enabled(self):
+        self.assertEqual(self.kernel.iommu_pt, True)
+
 if __name__ == '__main__':
     unittest.main()

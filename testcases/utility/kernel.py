@@ -14,6 +14,8 @@ class Kernel_conf():
         self.kthread_cpus = self.__get_kthread_cpus()
         self.irqaffinity = self.__get_irqaffinity()
         self.rcu_nocbs = self.__get_rcu_nocbs()
+        self.intel_iommu = self.__get_intel_iommu()
+        self.iommu_pt = self.__get_iommu_pt()
 
     """
     Kernel related utility functions
@@ -50,9 +52,6 @@ class Kernel_conf():
         else:
             return False
 
-    def get_intel_iommu_conf(self):
-        return self.__get_specific_grub_conf('intel_iommu');
-
     def __get_isolcpus_conf(self):
         l = self.__get_specific_grub_conf('isolcpus');
         return util.convert_multipule_str_range_to_int_list(l)
@@ -72,6 +71,20 @@ class Kernel_conf():
     def __get_rcu_nocbs(self):
         l = self.__get_specific_grub_conf('rcu_nocbs');
         return util.convert_multipule_str_range_to_int_list(l)
+
+    def __get_intel_iommu(self):
+        l = self.__get_specific_grub_conf('intel_iommu');
+        if l != '':
+            return l[:2]
+        else:
+            return ''
+
+    def __get_iommu_pt(self):
+        l = self.__get_specific_grub_conf('iommu_pt');
+        if l is not None:
+            return True
+        else:
+            return False
 
     def get_writeback_cpumask(self):
         return util.str_cmd_output('cat /sys/bus/workqueue/devices/writeback/cpumask')

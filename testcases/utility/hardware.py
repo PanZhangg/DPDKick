@@ -116,10 +116,11 @@ NIC related configurations
 """
 
 class Single_NIC_conf:
-    def __init__(self, code_name, rx_q_num, tx_q_num,
+    def __init__(self, lspci_vv_output, code_name, rx_q_num, tx_q_num,
                  numa_node, LnkCap, LnkSta, pci_addr,
                  ker_drv):
 
+        self.lspci_vv_output = lspci_vv_output
         self.nic_code_name = code_name
         self.rx_queue_num = rx_q_num
         self.tx_queue_num = tx_q_num
@@ -158,6 +159,11 @@ class NICs_conf:
         output = os.popen(self.lspci_nic_cmd, 'r')
         return output.read()
 
+    def get_nic_lspci_vv_output(self, pci_addr):
+        command = 'lspci -s ' + pci_addr + ' -vv'
+        #command = 'lspci -s ' + pci_addr + ' -v'
+        return os.popen(command, 'r').read()
+
     def get_nic_total_num(self):
         command = self.lspci_nic_cmd + '|wc -l'
         output = os.popen(command, 'r')
@@ -167,53 +173,45 @@ class NICs_conf:
         output = self.str_nic_pci_conf.splitlines()[list_num]
         return output[0 : 7]
 
-    def get_lspci_vv_info(self, list_num):
-        pci_addr = self.get_nic_pci_address(list_num)
-        command = 'lspci -s ' + pci_addr + ' -vv'
-        output = os.popen(command, 'r').read()
-        return output
-
     def get_nic_code_name(self, list_num):
         output = self.str_nic_pci_conf.splitlines()[list_num].split(':')[2]
         return output
 
-    def get_nic_LnkCap(self, list_num):
-        output = self.get_lspci_vv_info(list_num)
-        loc = output.rfind('LnkCap')
-        str_tmp = output[loc :]
+    def get_nic_LnkCap(self, lspci_vv_output):
+        loc = lspci_vv_output.rfind('LnkCap')
+        str_tmp = lspci_vv_output[loc :]
         loc = str_tmp.find('Speed')
         return str_tmp[loc + 6 : loc + 11]
 
-    def get_nic_LnkSta(self, list_num):
-        output = self.get_lspci_vv_info(list_num)
-        loc = output.find('LnkSta')
-        str_tmp = output[loc :]
+    def get_nic_LnkSta(self, lspci_vv_output):
+        loc = lspci_vv_output.find('LnkSta')
+        str_tmp = lspci_vv_output[loc :]
         loc = str_tmp.find('Speed')
         return str_tmp[loc + 6 : loc + 11]
 
-    def get_nic_numa_node(self, list_num):
-        output = self.get_lspci_vv_info(list_num)
-        loc = output.find('NUMA node')
+    def get_nic_numa_node(self, lspci_vv_output):
+        loc = lspci_vv_output.find('NUMA node')
         if loc == -1:
             return 0
         else:
-            return int(output[loc + 11 : loc + 12])
+            return int(lspci_vv_output[loc + 11 : loc + 12])
 
-    def get_nic_ker_drv_in_use(self, list_num):
-        output = self.get_lspci_vv_info(list_num)
-        loc = output.find('Kernel driver in use')
-        str_tmp = output[loc :]
+    def get_nic_ker_drv_in_use(self, lspci_vv_output):
+        loc = lspci_vv_output.find('Kernel driver in use')
+        str_tmp = lspci_vv_output[loc :]
         return str_tmp[22 : 37]
 
     def init_single_nic_conf(self, list_num):
-        code_name = self.get_nic_code_name(list_num)
-        numa_node = self.get_nic_numa_node(list_num)
-        LnkCap = self.get_nic_LnkCap(list_num)
-        LnkSta = self.get_nic_LnkSta(list_num)
         pci_addr = self.get_nic_pci_address(list_num)
-        ker_drv = self.get_nic_ker_drv_in_use(list_num)
+        lspci_vv_output = self.get_nic_lspci_vv_output(pci_addr)
+        code_name = self.get_nic_code_name(list_num)
+        numa_node = self.get_nic_numa_node(lspci_vv_output)
+        LnkCap = self.get_nic_LnkCap(lspci_vv_output)
+        LnkSta = self.get_nic_LnkSta(lspci_vv_output)
+        ker_drv = self.get_nic_ker_drv_in_use(lspci_vv_output)
 
-        sig_nic = Single_NIC_conf(code_name = code_name, rx_q_num = 0,
+        sig_nic = Single_NIC_conf(lspci_vv_output = lspci_vv_output,
+                                  code_name = code_name, rx_q_num = 0,
                                   tx_q_num = 0, numa_node = numa_node,
                                   LnkCap = LnkCap, LnkSta = LnkSta,
                                   pci_addr = pci_addr, ker_drv = ker_drv)

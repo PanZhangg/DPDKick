@@ -34,12 +34,14 @@ class hwconftest(unittest.TestCase):
     Verify if CPU C3 power state is disabled
     """
     def test_CPU_C3state_disabled(self):
+        util.testcase_append_suggestions(self._testMethodName, "Add \'max_cstate=0\' to grub")
         self.assertEqual(self.cpu.b_c3state_disabled, True)
 
     """
     Verify if CPU C6 power state is disabled
     """
     def test_CPU_C6state_disabled(self):
+        util.testcase_append_suggestions(self._testMethodName, "Add \'max_cstate=0\' to grub")
         self.assertEqual(self.cpu.b_c6state_disabled, True)
 
     """

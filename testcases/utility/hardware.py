@@ -196,7 +196,6 @@ class NICs_conf:
 
     def get_nic_lspci_vv_output(self, pci_addr):
         command = 'lspci -s ' + pci_addr + ' -vv'
-        #command = 'lspci -s ' + pci_addr + ' -v'
         return os.popen(command, 'r').read()
 
     def get_nic_total_num(self):

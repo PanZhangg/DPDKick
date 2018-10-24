@@ -1,5 +1,7 @@
 import os
 
+testcases_suggestions = dict()
+
 """
 Utilities for OS command interaction
 """
@@ -81,6 +83,9 @@ def format_print_test_suite_title(title):
     print '\33[1;34m==================================================='
     print title
     print '===================================================\33[0m'
+
+def testcase_append_suggestions(testcase, suggestion):
+    testcases_suggestions[testcase] = suggestion
 
 """
 Utilities for reading conf file

@@ -30,6 +30,7 @@ import sys
 import re
 import time
 import unittest
+from testcases.utility import utilities as util
 
 
 # ------------------------------------------------------------------------
@@ -375,6 +376,7 @@ class TestRunner(Template_mixin):
         report_attrs = self.getReportAttributes(result)
         heading = self._generate_heading(report_attrs, description)
         report = self._generate_report(result)
+        foot = self._generate_foot(result)
         output = self.title.rjust(30) +"\n" + \
         heading + \
         report
@@ -382,6 +384,7 @@ class TestRunner(Template_mixin):
             self.stream.write(output.encode('utf8'))
         except TypeError:
             self.stream.write(output)
+        self._print_foot(foot)
 
     def _generate_heading(self, report_attrs, description):
         a_lines = []
@@ -392,6 +395,23 @@ class TestRunner(Template_mixin):
         self.bc.CYAN+"Description:"+self.bc.END+description+"\n"
         return heading
 
+    def _generate_foot(self, result):
+        l = []
+        sortedResult = self.sortResult(result.result)
+        for cid, (testClass, classResults) in enumerate(sortedResult): # Iterate over the test cases
+            for tid, (n,test,output,error) in enumerate(classResults): # Iterate over the unit tests
+                if (n == 1 or n == 3):
+                    name = test.id().split('.')[-1]
+                    l.append(name)
+        return l
+
+    def _print_foot(self, foot):
+        print "\33[1;32m        ==Improve Suggestions:==\33[0m"
+        for t in foot:
+            if t in util.testcases_suggestions:
+                print "\33[01;31m        " + t + "\33[0m" + ":" + "\33[1;36m" + util.testcases_suggestions[t] + "\33[0m"
+            else:
+                print "\33[1;30m        " + t + "\33[0m" + ":" + "No special suggestions"
 
     def _generate_report(self, result):
         rows = []

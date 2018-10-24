@@ -1,3 +1,4 @@
+import sys
 import unittest
 from utility import kernel as kernelutil
 from utility import utilities as util
@@ -13,13 +14,13 @@ class kernelconftest(unittest.TestCase):
     Verify if NMI is disabled
     """
     def test_nmi_is_disable(self):
-        #print self.kernel.__dict__
         self.assertEqual(self.kernel.nmi_is_disabled, True)
 
     """
     Verify hugepage size is 1GB
     """
     def test_hugepage_size_1G(self):
+        util.testcase_append_suggestions(self._testMethodName, "Set Hugepage Size to 1G")
         self.assertEqual(self.hugepage_mem.hugepage_mem_size , '1048576 kB')
 
     """

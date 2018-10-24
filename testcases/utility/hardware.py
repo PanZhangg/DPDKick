@@ -13,6 +13,9 @@ class CPU_conf:
         self.b_hyperthread_enabled = self.__hyperthread_is_enabled()
         self.b_pstate_disabled = self.__intel_pstate_is_disabled()
         self.b_turbo_disabled = self.__turbo_is_disabled()
+        self.b_c6state_disabled = self.__c6state_disabled()
+        self.b_c3state_disabled = self.__c3state_disabled()
+        self.b_direct_cache_access_enabled = self.__dca_is_enabled()
         self.cpu_core_total_num = self.__get_core_total_num()
         self.cores = []
         self.init_all_cpus_conf()
@@ -78,6 +81,13 @@ class CPU_conf:
         else:
             return True
 
+    def __dca_is_enabled(self):
+        output = util.str_cmd_output('dmesg | grep dca')
+        if output.find('disabled') == -1:
+            return True
+        else:
+            return False
+
     def __get_core_total_num(self):
         if self.b_hyperthread_enabled == True:
             return (self.cpu_total_num / 2)
@@ -92,7 +102,21 @@ class CPU_conf:
         if output is None:
             return True
         else:
-            False
+            return False
+
+    def __c6state_disabled(self):
+        output = util.int_cmd_output('cat /sys/module/intel_idle/parameters/max_cstate')
+        if output >= 6:
+            return False
+        else:
+            return True
+
+    def __c3state_disabled(self):
+        output = util.int_cmd_output('cat /sys/module/intel_idle/parameters/max_cstate')
+        if output >= 3:
+            return False
+        else:
+            return True
 
     def get_single_CPU_conf_by_id(self, id):
         return self.cores[id]
@@ -102,7 +126,6 @@ class Single_CPU_core_conf:
         self.cpu_id = cpu_id
         self.core_num = core_num
         self.numa_node = numa_node
-
 
 """
 Memory related configurations

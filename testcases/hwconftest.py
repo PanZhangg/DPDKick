@@ -34,13 +34,13 @@ class hwconftest(unittest.TestCase):
     Verify if CPU C3 power state is disabled
     """
     def test_CPU_C3state_disabled(self):
-        pass
+        self.assertEqual(self.cpu.b_c3state_disabled, True)
 
     """
     Verify if CPU C6 power state is disabled
     """
     def test_CPU_C6state_disabled(self):
-        pass
+        self.assertEqual(self.cpu.b_c6state_disabled, True)
 
     """
     Verify if MLC streamer is enabled
@@ -64,7 +64,7 @@ class hwconftest(unittest.TestCase):
     Verify if Direct Cache Access is enabled
     """
     def test_direct_cache_access_enabled(self):
-        pass
+        self.assertEqual(self.cpu.b_direct_cache_access_enabled, True)
 
     """
     Verify if Turbo Boost is disabled

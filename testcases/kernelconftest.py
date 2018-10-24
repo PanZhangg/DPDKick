@@ -17,12 +17,6 @@ class kernelconftest(unittest.TestCase):
         self.assertEqual(self.kernel.nmi_is_disabled, True)
 
     """
-    Verify if intel_pstat is disabled
-    """
-    def test_pstat_is_disabled(self):
-        pass
-
-    """
     Verify hugepage size is 1GB
     """
     def test_hugepage_size_1G(self):

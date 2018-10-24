@@ -1,5 +1,12 @@
 #!/bin/bash
 # author: aaron
+echo '     _____  _____  _  __'
+echo '    |  __ \|  __ \| |/ /'
+echo '_  _| |__) | |  | |   / '
+echo ' \/ /  ___/| |  | |  <  '
+echo '>  <| |    | |__| | . \ '
+echo '_/\_\_|    |_____/|_|\_\'
+
 function get_nr_processor()
 {
     grep '^processor' /proc/cpuinfo | wc -l

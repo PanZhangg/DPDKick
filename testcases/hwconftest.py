@@ -73,6 +73,12 @@ class hwconftest(unittest.TestCase):
         self.assertEqual(self.cpu.b_turbo_disabled, True)
 
     """
+    Verify if intel pstate is disabled
+    """
+    def test_intel_pstate_disabled(self):
+        self.assertEqual(self.cpu.b_pstate_disabled, True)
+
+    """
     Verify DPDK nics' LnkCap and LnkSta are identical
     """
     def test_NIC_LnkCap_LnkSta_identical(self):

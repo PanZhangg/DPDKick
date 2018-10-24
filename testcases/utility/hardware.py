@@ -7,12 +7,13 @@ CPU related configurations
 
 class CPU_conf:
     def __init__(self):
-        self.str_CPU_code_name = self.get_CPU_code_name()
+        self.str_CPU_code_name = self.__get_CPU_code_name()
         self.str_instruction_supported = self.get_CPU_instructions_supported()
-        self.cpu_total_num = self.get_cpu_total_num()
-        self.b_hyperthread_enabled = self.hyperthread_is_enabled()
-        self.b_turbo_disabled = self.turbo_is_disabled()
-        self.cpu_core_total_num = self.get_core_total_num()
+        self.cpu_total_num = self.__get_cpu_total_num()
+        self.b_hyperthread_enabled = self.__hyperthread_is_enabled()
+        self.b_pstate_disabled = self.__intel_pstate_is_disabled()
+        self.b_turbo_disabled = self.__turbo_is_disabled()
+        self.cpu_core_total_num = self.__get_core_total_num()
         self.cores = []
         self.init_all_cpus_conf()
 
@@ -20,26 +21,26 @@ class CPU_conf:
     CPU related utility functions
     """
 
-    def print_lscpu_cmd(self):
+    def __print_lscpu_cmd(self):
         return util.str_cmd_output('lscpu')
 
-    def print_lscpu_e_cmd(self):
+    def __print_lscpu_e_cmd(self):
         return util.str_cmd_output('lscpu -e')
 
-    def get_lscpu_specific_conf(self, spec):
+    def __get_lscpu_specific_conf(self, spec):
         return util.str_get_specific_value_after_colon('lscpu', spec)
 
     def get_lscpu_e_specific_conf(self, cpu_id, column):
-        output = self.print_lscpu_e_cmd();
+        output = self.__print_lscpu_e_cmd();
         l = output.split('\n')
         l_title = l[0].split()
         ll = l[cpu_id + 1].split()
         column_idx = l_title.index(column)
         return ll[column_idx]
 
-    def get_cpu_total_num(self):
-        output = self.print_lscpu_cmd()
-        num = self.get_lscpu_specific_conf('CPU(s)')
+    def __get_cpu_total_num(self):
+        output = self.__print_lscpu_cmd()
+        num = self.__get_lscpu_specific_conf('CPU(s)')
         return int(num)
 
     def get_cpu_numa_node_by_cpu_id(self, cpu_id):
@@ -57,23 +58,27 @@ class CPU_conf:
                                               numa_node = node)
             self.cores.append(single_cpu)
 
-    def get_CPU_code_name(self):
-        output = self.print_lscpu_cmd()
-        name = self.get_lscpu_specific_conf('Model name')
+    def __get_CPU_code_name(self):
+        output = self.__print_lscpu_cmd()
+        name = self.__get_lscpu_specific_conf('Model name')
         return name
 
-    def hyperthread_is_enabled(self):
-        output = self.print_lscpu_cmd()
-        tpc = self.get_lscpu_specific_conf('Thread(s) per core')
+    def __hyperthread_is_enabled(self):
+        output = self.__print_lscpu_cmd()
+        tpc = self.__get_lscpu_specific_conf('Thread(s) per core')
         if int(tpc) == 1:
             return False
         else:
             return True
 
-    def turbo_is_disabled(self):
-        return False
+    def __turbo_is_disabled(self):
+        output = util.int_cmd_output('cat /sys/devices/system/cpu/intel_pstate/no_turbo')
+        if output == 0:
+            return False
+        else:
+            return True
 
-    def get_core_total_num(self):
+    def __get_core_total_num(self):
         if self.b_hyperthread_enabled == True:
             return (self.cpu_total_num / 2)
         else:
@@ -82,8 +87,12 @@ class CPU_conf:
     def get_CPU_instructions_supported(self):
         pass
 
-    def b_intel_pstat_is_disabled(self):
-        pass
+    def __intel_pstate_is_disabled(self):
+        output = util.str_cmd_output('cat /boot/config-$(uname -r) | grep -i pstate')
+        if output is None:
+            return True
+        else:
+            False
 
     def get_single_CPU_conf_by_id(self, id):
         return self.cores[id]

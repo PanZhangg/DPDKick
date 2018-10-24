@@ -404,10 +404,11 @@ class TestRunner(Template_mixin):
             classTable = Table(padding=2*padding)
             classTable.addTitles(["Test name", "Stack", "Status"])
             # subtotal for a class
-            np = nf = ne = 0
+            np = nf = ne = ns = 0
             for n,t,o,e in classResults:
                 if n == 0: np += 1
                 elif n == 1: nf += 1
+                elif n == 3: ns += 1
                 else: ne += 1
 
             # format class description
@@ -420,7 +421,7 @@ class TestRunner(Template_mixin):
             desc = doc and '%s: %s' % (name, doc) or name
             # style = ne > 0 and 'errorClass' or nf > 0 and 'failClass' or 'passClass',
 
-            table.addRow([desc, str(np+nf+ne), str(np), str(nf), str(ne)])
+            table.addRow([desc, str(np+nf+ne+ns), str(np), str(nf), str(ne), str(ns)])
             for tid, (n,test,output,error) in enumerate(classResults): # Iterate over the unit tests
                 classTable.addRow(self._generate_report_test(cid, tid, n, test, output, error))
             tests += str(classTable)

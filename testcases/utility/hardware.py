@@ -75,6 +75,9 @@ class CPU_conf:
             return True
 
     def __turbo_is_disabled(self):
+        output = util.str_cmd_output('cat /sys/devices/system/cpu/intel_pstate/no_turbo')
+        if (output.find('No such file')):
+            return False
         output = util.int_cmd_output('cat /sys/devices/system/cpu/intel_pstate/no_turbo')
         if output == 0:
             return False

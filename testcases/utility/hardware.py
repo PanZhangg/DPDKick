@@ -16,6 +16,7 @@ class CPU_conf:
         self.b_c6state_disabled = self.__c6state_disabled()
         self.b_c3state_disabled = self.__c3state_disabled()
         self.b_direct_cache_access_enabled = self.__dca_is_enabled()
+        self.scaling_governor = self.__get_scaling_governor()
         self.cpu_core_total_num = self.__get_core_total_num()
         self.cores = []
         self.init_all_cpus_conf()
@@ -120,6 +121,16 @@ class CPU_conf:
             return False
         else:
             return True
+
+    def __get_scaling_governor(self):
+        ret = []
+        output = util.str_cmd_output('cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor')
+        l = output.split('\n')
+        ret.append(l[0])
+        for ll in l:
+            if ll not in ret:
+                ret.append(ll)
+        return ret
 
     def get_single_CPU_conf_by_id(self, id):
         return self.cores[id]

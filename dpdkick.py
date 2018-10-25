@@ -9,9 +9,7 @@ import globalvar
 
 def sys_pre_flight():
     #Check if msr-tools is intalled
-    output = util.str_cmd_output('rdmsr')
-    if output.find('command not found'):
-        globalvar.MSR_TOOLS_IS_INSTALLED = False
+    globalvar.MSR_TOOLS_IS_INSTALLED = util.check_if_command_exists('rdmsr')
 
 def dpdkick_main():
     util.format_print_launch_screen()

@@ -23,6 +23,17 @@ def check_if_cmd_output_contains(cmd, str_to_check):
         return True
 
 """
+Utilities for OS operation
+"""
+
+def check_if_command_exists(command):
+    output = str_cmd_output('command -v ' + command)
+    if output is not None:
+        return True
+    else:
+        return False
+
+"""
 Return 'value' in for string like 'A=value'
 """
 def str_get_specific_value_after_colon(cmd, spec):

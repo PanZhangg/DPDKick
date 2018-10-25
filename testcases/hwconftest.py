@@ -36,7 +36,7 @@ class hwconftest(unittest.TestCase):
     """
     def test_CPU_C3state_disabled(self):
         util.testcase_append_suggestions(self._testMethodName,
-        "Add \'max_cstate=0\' to grub")
+        "Add \'intel_idle.max_cstate=0\' to grub")
         self.assertEqual(self.cpu.b_c3state_disabled, True)
 
     """
@@ -44,8 +44,21 @@ class hwconftest(unittest.TestCase):
     """
     def test_CPU_C6state_disabled(self):
         util.testcase_append_suggestions(self._testMethodName,
-        "Add \'max_cstate=0\' to grub")
+        "Add \'intel_idle.max_cstate=0\' to grub")
         self.assertEqual(self.cpu.b_c6state_disabled, True)
+
+    """
+    Verify if CPU scaling governor is performance
+    """
+    def test_CPU_scaling_governor_is_perf(self):
+        util.testcase_append_suggestions(self._testMethodName,
+        "Set \'performance\' to /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor")
+        ret = True
+        for l in self.cpu.scaling_governor:
+            if l != 'performance':
+                ret = False
+                break
+        self.assertEqual(ret, True)
 
     """
     Verify if DCU data prefetcher is enabled

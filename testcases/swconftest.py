@@ -31,6 +31,7 @@ class swconftest(unittest.TestCase):
     NUMA node
     """
     def test_CPU_NIC_on_same_NUMA_node(self):
+        util.testcase_append_suggestions(self._testMethodName, "Set CPU mask or PCI whitelist to use CPU cores and NICs which are on the same NUMA node")
         cpu_ids = self.sw.get_cpu_list_by_mask(self.cpu.cpu_core_total_num)
         numa_node_list = []
         for cpu_id in cpu_ids:

@@ -47,20 +47,26 @@ class hwconftest(unittest.TestCase):
     """
     Verify if MLC streamer is enabled
     """
+    @unittest.skip("")
     def test_CPU_MLC_streamer_enabled(self):
-        pass
+        util.testcase_append_suggestions(self._testMethodName,
+        "Can NOT verify this, but rememeber to ENABLE this feature in BIOS")
 
     """
     Verify if MLC spacial prefetcher is enabled
     """
+    @unittest.skip("")
     def test_CPU_MLC_spacial_prefetcher_enabled(self):
-        pass
+        util.testcase_append_suggestions(self._testMethodName,
+        "Can NOT verify this, but rememeber to ENABLE this feature in BIOS")
 
     """
     Verify if DCU data prefetcher is enabled
     """
+    @unittest.skip("")
     def test_CPU_DCU_data_prefetcher_enabled(self):
-        pass
+        util.testcase_append_suggestions(self._testMethodName,
+        "Can NOT verify this, but rememeber to ENABLE this feature in BIOS")
 
     """
     Verify if Direct Cache Access is enabled

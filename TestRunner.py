@@ -403,6 +403,8 @@ class TestRunner(Template_mixin):
                 if (n == 1 or n == 3):
                     name = test.id().split('.')[-1]
                     l.append(name)
+                    if n == 3:
+                        util.testcase_append_suggestions(name, "Skipped, check the stack info")
         return l
 
     def _print_foot(self, foot):

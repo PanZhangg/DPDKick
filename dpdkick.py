@@ -1,21 +1,16 @@
 #!/usr/bin/env python
+import globalvar
 import unittest
-import TestRunner
 from testcases import hwconftest
 from testcases import swconftest
 from testcases import kernelconftest
 from testcases.utility import utilities as util
-import globalvar
+import TestRunner
 
-def sys_pre_flight():
-    #Check if msr-tools is intalled
-    globalvar.MSR_TOOLS_IS_INSTALLED = util.check_if_command_exists('rdmsr')
 
 def dpdkick_main():
     util.format_print_launch_screen()
-    sys_pre_flight()
-    conf_ok = util.check_conf_file_is_completed()
-    if (conf_ok == False):
+    if (globalvar.CONF_PID_IS_VALID == False):
         print 'Fill the correct values in dpdkick.conf before launching DPDKick'
         print 'program exit..'
         raise SystemExit

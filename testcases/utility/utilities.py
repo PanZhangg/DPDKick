@@ -22,13 +22,22 @@ def check_if_cmd_output_contains(cmd, str_to_check):
     else:
         return True
 
+def get_cat_command_output(file_path):
+    output = str_cmd_output('cat ' + file_path)
+    if output == None:
+        return output
+    elif output.find('No such file or directory') != -1:
+        return None
+    else:
+        return output
+
 """
 Utilities for OS operation
 """
 
 def check_if_command_exists(command):
     output = str_cmd_output('command -v ' + command)
-    if output is not None:
+    if output  == None:
         return True
     else:
         return False

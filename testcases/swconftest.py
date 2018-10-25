@@ -46,6 +46,3 @@ class swconftest(unittest.TestCase):
         for node in numa_node_list:
             self.assertEqual(prev_numa_node, node)
             prev_numa_node = node
-
-if __name__ == '__main__':
-    unittest.main()

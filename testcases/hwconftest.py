@@ -1,8 +1,8 @@
+import globalvar
 import unittest
 import os
 from utility import utilities as util
 from utility import env as env
-import globalvar
 
 """
 Testcases related to hardware configuration
@@ -96,6 +96,3 @@ class hwconftest(unittest.TestCase):
         for i in range(self.nics.nic_total_num):
             nic = self.nics.nics_conf[i]
             self.assertEqual(nic.LnkCap, nic.LnkSta)
-
-if __name__ == '__main__':
-    unittest.main()

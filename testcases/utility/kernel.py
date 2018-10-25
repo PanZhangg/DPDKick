@@ -36,7 +36,6 @@ class Kernel_conf():
                 found = True
                 break
         if found == False:
-            print 'No ' + spec + ' in ' + cmdline
             return ''
         value = conf.split('=')[1]
         return value

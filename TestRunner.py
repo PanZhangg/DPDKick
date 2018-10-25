@@ -406,6 +406,8 @@ class TestRunner(Template_mixin):
         return l
 
     def _print_foot(self, foot):
+        if foot == []:
+            return
         print "\33[1;32m        ==Improve Suggestions:==\33[0m"
         for t in foot:
             if t in util.testcases_suggestions:

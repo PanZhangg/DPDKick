@@ -7,8 +7,15 @@ from testcases import kernelconftest
 from testcases.utility import utilities as util
 import globalvar
 
+def sys_pre_flight():
+    #Check if msr-tools is intalled
+    output = util.str_cmd_output('rdmsr')
+    if output.find('command not found'):
+        globalvar.MSR_TOOLS_IS_INSTALLED = False
+
 def dpdkick_main():
     util.format_print_launch_screen()
+    sys_pre_flight()
     conf_ok = util.check_conf_file_is_completed()
     if (conf_ok == False):
         print 'Fill the correct values in dpdkick.conf before launching DPDKick'

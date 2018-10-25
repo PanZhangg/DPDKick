@@ -2,6 +2,7 @@ import unittest
 import os
 from utility import utilities as util
 from utility import env as env
+import globalvar
 
 """
 Testcases related to hardware configuration
@@ -34,39 +35,28 @@ class hwconftest(unittest.TestCase):
     Verify if CPU C3 power state is disabled
     """
     def test_CPU_C3state_disabled(self):
-        util.testcase_append_suggestions(self._testMethodName, "Add \'max_cstate=0\' to grub")
+        util.testcase_append_suggestions(self._testMethodName,
+        "Add \'max_cstate=0\' to grub")
         self.assertEqual(self.cpu.b_c3state_disabled, True)
 
     """
     Verify if CPU C6 power state is disabled
     """
     def test_CPU_C6state_disabled(self):
-        util.testcase_append_suggestions(self._testMethodName, "Add \'max_cstate=0\' to grub")
+        util.testcase_append_suggestions(self._testMethodName,
+        "Add \'max_cstate=0\' to grub")
         self.assertEqual(self.cpu.b_c6state_disabled, True)
-
-    """
-    Verify if MLC streamer is enabled
-    """
-    @unittest.skip("")
-    def test_CPU_MLC_streamer_enabled(self):
-        util.testcase_append_suggestions(self._testMethodName,
-        "Can NOT verify this, but rememeber to ENABLE this feature in BIOS")
-
-    """
-    Verify if MLC spacial prefetcher is enabled
-    """
-    @unittest.skip("")
-    def test_CPU_MLC_spacial_prefetcher_enabled(self):
-        util.testcase_append_suggestions(self._testMethodName,
-        "Can NOT verify this, but rememeber to ENABLE this feature in BIOS")
 
     """
     Verify if DCU data prefetcher is enabled
     """
-    @unittest.skip("")
+    @unittest.skipIf(globalvar.MSR_TOOLS_IS_INSTALLED == False, "msr-tools not installed")
     def test_CPU_DCU_data_prefetcher_enabled(self):
         util.testcase_append_suggestions(self._testMethodName,
-        "Can NOT verify this, but rememeber to ENABLE this feature in BIOS")
+        "ENABLE this feature in BIOS")
+        output = util.str_cmd_output('rdmsr 0x1A4')
+        v = int(output, 16)
+        self.assertEqual((v & (1 << 2)), 0)
 
     """
     Verify if Direct Cache Access is enabled

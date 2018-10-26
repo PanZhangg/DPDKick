@@ -173,6 +173,12 @@ class Single_NIC_conf:
         self.NUMA_node = numa_node
         self.LnkCap = LnkCap
         self.LnkSta = LnkSta
+        #TODO
+        self.pcie_width = 0
+        self.pcie_maxpayloadsize = 0
+        self.pcie_maxreadreq = 0
+        self.pcie_targetlinkspeed = 0
+        #__TODO__
         self.pci_address = pci_addr
         self.ker_drv_in_use = ker_drv
 

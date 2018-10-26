@@ -2,7 +2,9 @@
 Ultimate DPDK System Enabling Expert
 
 # Usage
-Straightly run
+
+#. Complete ./dpdkick.conf
+#. Straightly run
 `./dpdkick.py`
 
 # Add New Testcases

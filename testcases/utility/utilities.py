@@ -110,8 +110,29 @@ def testcase_append_suggestions(testcase, suggestion):
 """
 Utilities for reading conf file
 """
+
+#Append new configuration file parameters here
+CONF_FILE_PARAMETERS = [
+    "dpdk-app-pid",
+    "dpdk-app-cpu-mask"
+]
+
 def check_conf_file_is_completed():
-    return True
+    f = open('./dpdkick.conf', 'r')
+    lines = f.read().split('\n')
+    COMPLETED = True
+    for p in CONF_FILE_PARAMETERS:
+        FOUND = False
+        for l in lines:
+            if l.find(p) != -1:
+                FOUND = True
+                break
+        v = l.split('=')[1]
+        if FOUND != True or v == '':
+            COMPLETED = False
+            break
+    f.close()
+    return COMPLETED
 
 def get_specific_conf_from_conf_file(conf):
     f = open('./dpdkick.conf', 'r')

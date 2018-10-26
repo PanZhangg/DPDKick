@@ -76,8 +76,8 @@ class CPU_conf:
             return True
 
     def __turbo_is_disabled(self):
-        output = util.str_cmd_output('cat /sys/devices/system/cpu/intel_pstate/no_turbo')
-        if (output.find('No such file')):
+        output = util.get_cat_command_output('/sys/devices/system/cpu/intel_pstate/no_turbo')
+        if output == None:
             return False
         output = util.int_cmd_output('cat /sys/devices/system/cpu/intel_pstate/no_turbo')
         if output == 0:
@@ -102,7 +102,7 @@ class CPU_conf:
         pass
 
     def __intel_pstate_is_disabled(self):
-        output = util.str_cmd_output('cat /boot/config-$(uname -r) | grep -i pstate')
+        output = util.get_cat_command_output('/boot/config-$(uname -r) | grep -i pstate')
         if output is None:
             return True
         else:
@@ -124,7 +124,7 @@ class CPU_conf:
 
     def __get_scaling_governor(self):
         ret = []
-        output = util.str_cmd_output('cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor')
+        output = util.get_cat_command_output('/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor')
         l = output.split('\n')
         ret.append(l[0])
         for ll in l:

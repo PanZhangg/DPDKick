@@ -1,8 +1,8 @@
-import globalvar
 import unittest
 import os
 from utility import utilities as util
 from utility import env as env
+import globalvar
 
 """
 Testcases related to hardware configuration
@@ -29,6 +29,8 @@ class hwconftest(unittest.TestCase):
     Verify if Hyper Thread is disabled
     """
     def test_hyper_thread_disabled(self):
+        util.testcase_append_suggestions(self._testMethodName,
+        "DISABLE this feature in BIOS")
         self.assertEqual(self.cpu.b_hyperthread_enabled, False)
 
     """
@@ -75,20 +77,35 @@ class hwconftest(unittest.TestCase):
     Verify if Direct Cache Access is enabled
     """
     def test_direct_cache_access_enabled(self):
+        util.testcase_append_suggestions(self._testMethodName,
+        "ENABLE this feature in BIOS")
         self.assertEqual(self.cpu.b_direct_cache_access_enabled, True)
 
     """
     Verify if Turbo Boost is disabled
     """
     def test_turbo_boost_disabled(self):
+        util.testcase_append_suggestions(self._testMethodName,
+        "DISABLE this feature in BIOS")
         self.assertEqual(self.cpu.b_turbo_disabled, True)
 
     """
     Verify if intel pstate is disabled
     """
     def test_intel_pstate_disabled(self):
+        util.testcase_append_suggestions(self._testMethodName,
+        "DISABLE this feature in BIOS")
         self.assertEqual(self.cpu.b_pstate_disabled, True)
 
+    """
+    Verify DPDK nics' PICe Speed is 8GT in LnkCap
+    """
+    def test_NIC_LnkCap_speed_8GT(self):
+        util.testcase_append_suggestions(self._testMethodName,
+        "Install NIC in a Width x8 Gen3 PCIe slot")
+        for i in range(self.nics.nic_total_num):
+            nic = self.nics.nics_conf[i]
+            self.assertEqual(nic.LnkCap, "8GT/s")
     """
     Verify DPDK nics' LnkCap and LnkSta are identical
     """

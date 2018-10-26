@@ -1,8 +1,8 @@
 import hardware as hwutil
 import software as swutil
 import kernel as kernelutil
-import globalvar
 import utilities as util
+import globalvar
 
 class env():
     def __init__(self):

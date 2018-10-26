@@ -7,13 +7,17 @@ from testcases import kernelconftest
 from testcases.utility import utilities as util
 import TestRunner
 
-
-def dpdkick_main():
+def dpdkick_init():
     util.format_print_launch_screen()
+
     if (globalvar.CONF_PID_IS_VALID == False):
         print 'Fill the correct values in dpdkick.conf before launching DPDKick'
         print 'program exit..'
         raise SystemExit
+
+def dpdkick_main():
+
+    dpdkick_init()
 
     hw_conf_test_suite = unittest.TestLoader().loadTestsFromTestCase(hwconftest.hwconftest)
     sw_conf_test_suite = unittest.TestLoader().loadTestsFromTestCase(swconftest.swconftest)

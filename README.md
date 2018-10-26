@@ -15,10 +15,18 @@ _in `mytest.py`_
 import unittest
 
 class mytest_class(unittest.TestCase):
-
+    # Each testcase's def name must start with "test_"
     def test_mytest_test1(self):
         # Testlogic
         self.assertEqual(my_assert)
+```
+
+_./testcases/utility/env.py_
+
+in `env.py`
+
+```python
+    self.mytestcases = mytest.mytest_class()
 ```
 
 _./dpdkick.py_

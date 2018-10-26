@@ -21,7 +21,7 @@ class swconftest(unittest.TestCase):
     Verify software thread number is less than the
     number of total CPU cores
     """
-    def test_thread_num_less_than_cpu_core_num(self):
+    def test_thread_num_less_than_cpu_core(self):
         nr_cpu = self.cpu.cpu_core_total_num
         nr_thread = self.sw.thread_num
         self.assertLess(nr_thread, nr_cpu)
@@ -30,7 +30,7 @@ class swconftest(unittest.TestCase):
     Verify if DPDK NICs and pinning CPU cores are at the same
     NUMA node
     """
-    def test_CPU_NIC_on_same_NUMA_node(self):
+    def test_CPU_NIC_same_NUMA(self):
         util.testcase_append_suggestions(self._testMethodName, "Set CPU mask or PCI whitelist to use CPU cores and NICs which are on the same NUMA node")
         cpu_ids = self.sw.get_cpu_list_by_mask(self.cpu.cpu_core_total_num)
         numa_node_list = []

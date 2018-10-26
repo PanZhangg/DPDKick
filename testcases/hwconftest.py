@@ -52,7 +52,7 @@ class hwconftest(unittest.TestCase):
     """
     Verify if CPU scaling governor is performance
     """
-    def test_CPU_scaling_governor_is_perf(self):
+    def test_CPU_sg_is_perf(self):
         util.testcase_append_suggestions(self._testMethodName,
         "Set \'performance\' to /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor")
         ret = True
@@ -66,7 +66,7 @@ class hwconftest(unittest.TestCase):
     Verify if DCU data prefetcher is enabled
     """
     @unittest.skipIf(globalvar.MSR_TOOLS_IS_INSTALLED == False, "msr-tools not installed")
-    def test_CPU_DCU_data_prefetcher_enabled(self):
+    def test_CPU_DCU_enabled(self):
         util.testcase_append_suggestions(self._testMethodName,
         "ENABLE this feature in BIOS")
         output = util.str_cmd_output('rdmsr 0x1A4')
@@ -76,7 +76,7 @@ class hwconftest(unittest.TestCase):
     """
     Verify if Direct Cache Access is enabled
     """
-    def test_direct_cache_access_enabled(self):
+    def test_DCA_enabled(self):
         util.testcase_append_suggestions(self._testMethodName,
         "ENABLE this feature in BIOS")
         self.assertEqual(self.cpu.b_direct_cache_access_enabled, True)

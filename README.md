@@ -7,6 +7,7 @@ Straightly run
 
 # Add New Testcases
 
+## Implement your testcase in a test suite
 ./testcases/mytest.py
 
 _in `mytest.py`_
@@ -21,14 +22,7 @@ class mytest_class(unittest.TestCase):
         self.assertEqual(my_assert)
 ```
 
-_./testcases/utility/env.py_
-
-in `env.py`
-
-```python
-    self.mytestcases = mytest.mytest_class()
-```
-
+## Run the test suite
 _./dpdkick.py_
 
 in `dpdkick.py`

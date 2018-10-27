@@ -79,8 +79,7 @@ class CPU_conf:
         output = util.get_cat_command_output('/sys/devices/system/cpu/intel_pstate/no_turbo')
         if output == None:
             return False
-        output = util.int_cmd_output('cat /sys/devices/system/cpu/intel_pstate/no_turbo')
-        if output == 0:
+        if output == '0':
             return False
         else:
             return True
@@ -125,6 +124,8 @@ class CPU_conf:
     def __get_scaling_governor(self):
         ret = []
         output = util.get_cat_command_output('/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor')
+        if output == None:
+            return None
         l = output.split('\n')
         ret.append(l[0])
         for ll in l:

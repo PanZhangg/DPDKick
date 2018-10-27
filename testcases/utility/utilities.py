@@ -23,13 +23,11 @@ def check_if_cmd_output_contains(cmd, str_to_check):
         return True
 
 def get_cat_command_output(file_path):
-    output = str_cmd_output('cat ' + file_path)
-    if output == None:
-        return output
-    elif output.find('No such file or directory') != -1:
+    exist = os.path.exists(file_path)
+    if exist == False:
         return None
-    else:
-        return output
+    output = str_cmd_output('cat ' + file_path)
+    return output
 
 """
 Utilities for OS operation

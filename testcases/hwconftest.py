@@ -56,6 +56,9 @@ class hwconftest(unittest.TestCase):
         util.testcase_append_suggestions(self._testMethodName,
         "Set \'performance\' to /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor")
         ret = True
+        if self.cpu.scaling_governor == False:
+            #Fail this testcase
+            self.assertEqual(True, False)
         for l in self.cpu.scaling_governor:
             if l != 'performance':
                 ret = False

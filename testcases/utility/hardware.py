@@ -165,6 +165,7 @@ NIC related configurations
 class Single_NIC_conf:
     def __init__(self, lspci_vv_output, code_name, rx_q_num, tx_q_num,
                  numa_node, LnkCap, LnkSta, pci_addr,
+                 cap_mpl, ctl_mpl, target_link_speed,
                  ker_drv):
 
         self.lspci_vv_output = lspci_vv_output
@@ -174,12 +175,11 @@ class Single_NIC_conf:
         self.NUMA_node = numa_node
         self.LnkCap = LnkCap
         self.LnkSta = LnkSta
-        #TODO
         self.pcie_width = 0
-        self.pcie_maxpayloadsize = 0
+        self.pcie_devcap_maxpayloadsize = cap_mpl
+        self.pcie_devctl_maxpayloadsize = ctl_mpl
         self.pcie_maxreadreq = 0
-        self.pcie_targetlinkspeed = 0
-        #__TODO__
+        self.pcie_targetlinkspeed = target_link_speed
         self.pci_address = pci_addr
         self.ker_drv_in_use = ker_drv
 
@@ -248,6 +248,25 @@ class NICs_conf:
         else:
             return int(lspci_vv_output[loc + 11 : loc + 12])
 
+    def get_nic_devcap_maxpayload(self, lspci_vv_output):
+        loc = lspci_vv_output.find('DevCap')
+        maxpayload = lspci_vv_output[loc + 19: loc + 23]
+        return int(maxpayload)
+
+    def get_nic_devctl_maxpayload(self, lspci_vv_output):
+        loc = lspci_vv_output.find('DevCtl')
+        loc1 = lspci_vv_output[loc :].find('MaxPayload')
+        maxpayload = lspci_vv_output[loc + loc1 + 11: loc + loc1 + 15]
+        return int(maxpayload)
+
+    def get_nic_target_link_speed(self, lspci_vv_output):
+        loc = lspci_vv_output.find('Target Link Speed')
+        if loc == -1:
+            return None
+        loc1 = lspci_vv_output[loc :].find('GT')
+        tls = lspci_vv_output[loc + 19 : loc + loc1]
+        return tls + 'GT/s'
+
     def get_nic_ker_drv_in_use(self, lspci_vv_output):
         loc = lspci_vv_output.find('Kernel driver in use')
         str_tmp = lspci_vv_output[loc :]
@@ -260,12 +279,17 @@ class NICs_conf:
         numa_node = self.get_nic_numa_node(lspci_vv_output)
         LnkCap = self.get_nic_LnkCap(lspci_vv_output)
         LnkSta = self.get_nic_LnkSta(lspci_vv_output)
+        devcap_maxpayload = self.get_nic_devcap_maxpayload(lspci_vv_output)
+        devctl_maxpayload = self.get_nic_devctl_maxpayload(lspci_vv_output)
+        tls = self.get_nic_target_link_speed(lspci_vv_output)
         ker_drv = self.get_nic_ker_drv_in_use(lspci_vv_output)
 
         sig_nic = Single_NIC_conf(lspci_vv_output = lspci_vv_output,
                                   code_name = code_name, rx_q_num = 0,
                                   tx_q_num = 0, numa_node = numa_node,
                                   LnkCap = LnkCap, LnkSta = LnkSta,
+                                  cap_mpl = devcap_maxpayload, ctl_mpl = devctl_maxpayload,
+                                  target_link_speed = tls,
                                   pci_addr = pci_addr, ker_drv = ker_drv)
 
         self.nics_conf.append(sig_nic)

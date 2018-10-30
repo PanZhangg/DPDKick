@@ -101,7 +101,7 @@ class hwconftest(unittest.TestCase):
         self.assertEqual(self.cpu.b_pstate_disabled, True)
 
     """
-    Verify DPDK nics' PICe Speed is 8GT in LnkCap
+    Verify DPDK nics' PICe Speed is 8GT/s in LnkCap
     """
     def test_NIC_LnkCap_speed_8GT(self):
         util.testcase_append_suggestions(self._testMethodName,
@@ -109,6 +109,18 @@ class hwconftest(unittest.TestCase):
         for i in range(self.nics.nic_total_num):
             nic = self.nics.nics_conf[i]
             self.assertEqual(nic.LnkCap, "8GT/s")
+
+    """
+    Verify DPDK nics' DevCap Maxpayload and DevCtl Maxpayload are
+    identical
+    """
+    def test_NIC_devcap_devctl_maypayload(self):
+        util.testcase_append_suggestions(self._testMethodName,
+        "Set the maxpayload to identical number")
+        for i in range(self.nics.nic_total_num):
+            nic = self.nics.nics_conf[i]
+            self.assertEqual(nic.pcie_devcap_maxpayloadsize ,
+                             nic.pcie_devctl_maxpayloadsize)
     """
     Verify DPDK nics' LnkCap and LnkSta are identical
     """

@@ -250,12 +250,18 @@ class NICs_conf:
 
     def get_nic_devcap_maxpayload(self, lspci_vv_output):
         loc = lspci_vv_output.find('DevCap')
+        if loc == -1:
+            return None
         maxpayload = lspci_vv_output[loc + 19: loc + 23]
         return int(maxpayload)
 
     def get_nic_devctl_maxpayload(self, lspci_vv_output):
         loc = lspci_vv_output.find('DevCtl')
+        if loc == -1:
+            return None
         loc1 = lspci_vv_output[loc :].find('MaxPayload')
+        if loc1 == -1:
+            return None
         maxpayload = lspci_vv_output[loc + loc1 + 11: loc + loc1 + 15]
         return int(maxpayload)
 

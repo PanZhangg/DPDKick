@@ -165,7 +165,7 @@ NIC related configurations
 class Single_NIC_conf:
     def __init__(self, lspci_vv_output, code_name, rx_q_num, tx_q_num,
                  numa_node, LnkCap, LnkSta, pci_addr,
-                 cap_mpl, ctl_mpl, target_link_speed,
+                 cap_mpl, ctl_mpl, mrq, target_link_speed,
                  ker_drv):
 
         self.lspci_vv_output = lspci_vv_output
@@ -178,7 +178,7 @@ class Single_NIC_conf:
         self.pcie_width = 0
         self.pcie_devcap_maxpayloadsize = cap_mpl
         self.pcie_devctl_maxpayloadsize = ctl_mpl
-        self.pcie_maxreadreq = 0
+        self.pcie_maxreadreq = mrq
         self.pcie_targetlinkspeed = target_link_speed
         self.pci_address = pci_addr
         self.ker_drv_in_use = ker_drv
@@ -265,6 +265,16 @@ class NICs_conf:
         maxpayload = lspci_vv_output[loc + loc1 + 11: loc + loc1 + 15]
         return int(maxpayload)
 
+    def get_nic_max_read_req(self, lspci_vv_output):
+        loc = lspci_vv_output.find('MaxReadReq')
+        if loc == -1:
+            return None
+        loc1 = lspci_vv_output[loc :].find('bytes')
+        if loc1 == -1:
+            return None
+        maxreadreq = lspci_vv_output[loc + 10 : loc + loc1]
+        return int(maxreadreq)
+
     def get_nic_target_link_speed(self, lspci_vv_output):
         loc = lspci_vv_output.find('Target Link Speed')
         if loc == -1:
@@ -287,6 +297,7 @@ class NICs_conf:
         LnkSta = self.get_nic_LnkSta(lspci_vv_output)
         devcap_maxpayload = self.get_nic_devcap_maxpayload(lspci_vv_output)
         devctl_maxpayload = self.get_nic_devctl_maxpayload(lspci_vv_output)
+        max_read_req = self.get_nic_max_read_req(lspci_vv_output)
         tls = self.get_nic_target_link_speed(lspci_vv_output)
         ker_drv = self.get_nic_ker_drv_in_use(lspci_vv_output)
 
@@ -295,7 +306,7 @@ class NICs_conf:
                                   tx_q_num = 0, numa_node = numa_node,
                                   LnkCap = LnkCap, LnkSta = LnkSta,
                                   cap_mpl = devcap_maxpayload, ctl_mpl = devctl_maxpayload,
-                                  target_link_speed = tls,
+                                  mrq = max_read_req, target_link_speed = tls,
                                   pci_addr = pci_addr, ker_drv = ker_drv)
 
         self.nics_conf.append(sig_nic)

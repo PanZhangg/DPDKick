@@ -150,8 +150,9 @@ class Memory_conf:
     def __init__(self):
         self.memroy_total_size = self.__get_memory_total_size()
         self.memory_DIMM_num = self.__get_memory_DIMM_num()
-        self.memory_channels_num = self.__get_memory_channels_num(self)
+        self.memory_channels_num = self.__get_memory_channels_num()
         self.memory_DIMM_per_channel = self.memory_DIMM_num / self.memory_channels_num
+        self.dmidecode_output = self.__get_dmidecode_output()
         #TODO:
         self.dimms = []
         self.__init_memory_DIMMs()
@@ -173,20 +174,53 @@ class Memory_conf:
         cmd = 'dmidecode -t memory | grep Locator | grep DIMM | grep 1 |wc -l'
         return util.int_cmd_output(cmd)
 
+    def __get_dmidecode_output(self):
+        cmd = 'dmidecode -t memory'
+        output = util.str_cmd_output(cmd)
+        l = output.split('\n')
+        return l
+
     def __init_memory_DIMMs(self):
-        pass
+        for i in range(self.memory_DIMM_num):
+            locator = self.__get_mem_dimm_locator(i)
+            size = self.__get_mem_dimm_size(i)
+            speed = self.__get_mem_dimm_speed(i)
+            conf_speed = self.__get_mem_conf_speed(i)
+            node = self.__get_mem_bank_locator(i)
+            dimm = Memory_DIMM(locator = locator, size = size,
+                                speed = speed, conf_speed = conf_speed,
+                                node = node)
+            self.dimms.append(dimm)
+
+    def __get_mem_dimm_spec_conf(self, conf, index):
+        cnt = 0
+        for l in self.dmidecode_output:
+            if l.find(conf) != -1:
+                if cnt == index:
+                    return l.split(":")[1]
+                cnt = cnt + 1
+        return None
 
     def __get_mem_dimm_locator(self, index):
-        pass
+        return self.__get_mem_dimm_spec_conf("Locator: DIMM", index)
 
-    def __get_mem_dimm_size(self):
-        pass
+    def __get_mem_dimm_size(self, index):
+        return self.__get_mem_dimm_spec_conf("Size", index)
 
-    def __get_mem_dimm_speed(self):
-        pass
+    def __get_mem_dimm_speed(self, index):
+        cnt = 0
+        for l in self.dmidecode_output:
+            if l.find("Speed") != -1 and l.find("Configured") == -1:
+                if cnt == index:
+                    return l.split(":")[1]
+                cnt = cnt + 1
+        return None
 
-    def __get_mem_conf_speed(self):
-        pass
+    def __get_mem_conf_speed(self, index):
+        return self.__get_mem_dimm_spec_conf("Configured Clock Speed", index)
+
+    def __get_mem_bank_locator(self, index):
+        return self.__get_mem_dimm_spec_conf("Bank Locator", index)
 
 class Memory_DIMM:
     def __init__(self, locator, size, speed, conf_speed, node):

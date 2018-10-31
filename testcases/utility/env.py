@@ -10,6 +10,7 @@ class env():
         #system variables detection and init
         self.cpu_conf = hwutil.CPU_conf()
         self.nics_conf = hwutil.NICs_conf()
+        self.mem_conf = hwutil.Memory_conf()
         self.sw_conf = swutil.Software_conf()
         self.rt_telemetry = swutil.sw_runtime_telemetry()
         self.kernel = kernelutil.Kernel_conf()

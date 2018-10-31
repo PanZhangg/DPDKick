@@ -149,6 +149,13 @@ Memory related configurations
 class Memory_conf:
     def __init__(self):
         self.memroy_total_size = self.__get_memory_total_size()
+        self.memory_DIMM_num = self.__get_memory_DIMM_num()
+        self.memory_channels_num = self.__get_memory_channels_num(self)
+        self.memory_DIMM_per_channel = self.memory_DIMM_num / self.memory_channels_num
+        #TODO:
+        self.dimms = []
+        self.__init_memory_DIMMs()
+        #__TODO__
 
     """
     Memory related utility functions
@@ -157,6 +164,38 @@ class Memory_conf:
         cmd = 'cat /proc/meminfo'
         total = util.str_get_specific_value_after_colon(cmd, 'MemTotal')
         return total
+
+    def __get_memory_DIMM_num(self):
+        cmd = 'dmidecode -t memory | grep Locator | grep DIMM |wc -l'
+        return util.int_cmd_output(cmd)
+
+    def __get_memory_channels_num(self):
+        cmd = 'dmidecode -t memory | grep Locator | grep DIMM | grep 1 |wc -l'
+        return util.int_cmd_output(cmd)
+
+    def __init_memory_DIMMs(self):
+        pass
+
+    def __get_mem_dimm_locator(self, index):
+        pass
+
+    def __get_mem_dimm_size(self):
+        pass
+
+    def __get_mem_dimm_speed(self):
+        pass
+
+    def __get_mem_conf_speed(self):
+        pass
+
+class Memory_DIMM:
+    def __init__(self, locator, size, speed, conf_speed, node):
+        self.locator = locator
+        self.memory_size = size
+        self.memory_speed = speed
+        self.memory_config_speed = conf_speed
+        self.bank_node = node
+
 
 """
 NIC related configurations

@@ -153,10 +153,8 @@ class Memory_conf:
         self.memory_channels_num = self.__get_memory_channels_num()
         self.memory_DIMM_per_channel = self.memory_DIMM_num / self.memory_channels_num
         self.dmidecode_output = self.__get_dmidecode_output()
-        #TODO:
         self.dimms = []
         self.__init_memory_DIMMs()
-        #__TODO__
 
     """
     Memory related utility functions
@@ -197,7 +195,7 @@ class Memory_conf:
         for l in self.dmidecode_output:
             if l.find(conf) != -1:
                 if cnt == index:
-                    return l.split(":")[1]
+                    return l.split(":")[1].strip()
                 cnt = cnt + 1
         return None
 
@@ -212,7 +210,7 @@ class Memory_conf:
         for l in self.dmidecode_output:
             if l.find("Speed") != -1 and l.find("Configured") == -1:
                 if cnt == index:
-                    return l.split(":")[1]
+                    return l.split(":")[1].strip()
                 cnt = cnt + 1
         return None
 

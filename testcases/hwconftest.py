@@ -11,6 +11,7 @@ class hwconftest(unittest.TestCase):
     NUMA_ENABLED_IN_BIOS = False
     nics = env.g_env_conf.nics_conf
     cpu = env.g_env_conf.cpu_conf
+    mem = env.g_env_conf.mem_conf
 
     """
     Verify if NUMA is enabled
@@ -141,3 +142,62 @@ class hwconftest(unittest.TestCase):
         for i in range(self.nics.nic_total_num):
             nic = self.nics.nics_conf[i]
             self.assertEqual(nic.LnkCap, nic.LnkSta)
+
+    """
+    Verify Memory speed is equal to DDR4 frequency(2133 MHz)
+    """
+    def test_mem_speed_ddr4(self):
+        util.testcase_append_suggestions(self._testMethodName,
+        "Recommanded to use DDR4 memory")
+        for i in self.mem.dimms:
+            if i.memory_speed != "Unknown":
+                self.assertEqual(i.memory_speed, "2133 MHz")
+
+    """
+    Verify Memory speed is equal to Memory configured speed
+    """
+    def test_mem_speed_equal_conf_speed(self):
+        util.testcase_append_suggestions(self._testMethodName,
+        "Configure speed should be equal to memory speed")
+        for i in self.mem.dimms:
+            if i.memory_speed != "Unknown":
+                self.assertEqual(i.memory_speed, i.memory_config_speed)
+
+    """
+    Verify each memory DIMM has at least 4GB memory
+    """
+    def test_mem_dimm_larger_4GB(self):
+        util.testcase_append_suggestions(self._testMethodName,
+        "It's recommaned to have more than 4GB each dimm slot")
+        for i in self.mem.dimms:
+            if i.memory_size != "No Module Installed":
+                dimm_size = int(i.memory_size[:-2])
+                self.assertGreaterEqual(dimm_size, 4096)
+
+    """
+    Verify each memory DIMM has identical memory size
+    """
+    def test_mem_dimm_identical_size(self):
+        util.testcase_append_suggestions(self._testMethodName,
+        "Memory size of each DIMM should be identical")
+        for i in self.mem.dimms:
+            dimm_size = int(self.mem.dimms[0].memory_size[:-2])
+            if i.memory_size != "No Module Installed":
+                dimm_size_t = int(i.memory_size[:-2])
+                self.assertGreaterEqual(dimm_size, dimm_size_t)
+
+    """
+    Verify each memory channel has identical memory size
+    """
+    def test_mem_channel_identical_size(self):
+        util.testcase_append_suggestions(self._testMethodName,
+        "Memory size of each channel should be identical")
+        for i in range(self.mem.memory_channels_num):
+            channel_size = 0
+            for j in range(self.mem.memory_DIMM_per_channel):
+                if self.mem.dimms[i * self.mem.memory_DIMM_per_channel + j].memory_size != "No Module Installed":
+                    channel_size += int(self.mem.dimms[j].memory_size[:-2])
+            if i == 0:
+                first_channel_size = channel_size
+            else:
+                self.assertEqual(first_channel_size, channel_size)

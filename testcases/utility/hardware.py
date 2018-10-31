@@ -1,5 +1,6 @@
 import os
 import utilities as util
+import globalvar
 
 """
 CPU related configurations
@@ -150,6 +151,10 @@ class Memory_conf:
     def __init__(self):
         self.memroy_total_size = self.__get_memory_total_size()
         self.memory_DIMM_num = self.__get_memory_DIMM_num()
+        if self.memory_DIMM_num == 0:
+            #Not running in a normal physical host env
+            globalvar.NORMAL_PHY_HOST_MEM = False
+            return
         self.memory_channels_num = self.__get_memory_channels_num()
         self.memory_DIMM_per_channel = self.memory_DIMM_num / self.memory_channels_num
         self.dmidecode_output = self.__get_dmidecode_output()

@@ -146,6 +146,7 @@ class hwconftest(unittest.TestCase):
     """
     Verify Memory speed is equal to DDR4 frequency(2133 MHz)
     """
+    @unittest.skipIf(globalvar.NORMAL_PHY_HOST_MEM == False, "Not running in a normal physical env")
     def test_mem_speed_ddr4(self):
         util.testcase_append_suggestions(self._testMethodName,
         "Recommanded to use DDR4 memory")
@@ -156,6 +157,7 @@ class hwconftest(unittest.TestCase):
     """
     Verify Memory speed is equal to Memory configured speed
     """
+    @unittest.skipIf(globalvar.NORMAL_PHY_HOST_MEM == False, "Not running in a normal physical env")
     def test_mem_speed_equal_conf_speed(self):
         util.testcase_append_suggestions(self._testMethodName,
         "Configure speed should be equal to memory speed")
@@ -166,6 +168,7 @@ class hwconftest(unittest.TestCase):
     """
     Verify each memory DIMM has at least 4GB memory
     """
+    @unittest.skipIf(globalvar.NORMAL_PHY_HOST_MEM == False, "Not running in a normal physical env")
     def test_mem_dimm_larger_4GB(self):
         util.testcase_append_suggestions(self._testMethodName,
         "It's recommaned to have more than 4GB each dimm slot")
@@ -177,6 +180,7 @@ class hwconftest(unittest.TestCase):
     """
     Verify each memory DIMM has identical memory size
     """
+    @unittest.skipIf(globalvar.NORMAL_PHY_HOST_MEM == False, "Not running in a normal physical env")
     def test_mem_dimm_identical_size(self):
         util.testcase_append_suggestions(self._testMethodName,
         "Memory size of each DIMM should be identical")
@@ -189,6 +193,7 @@ class hwconftest(unittest.TestCase):
     """
     Verify each memory channel has identical memory size
     """
+    @unittest.skipIf(globalvar.NORMAL_PHY_HOST_MEM == False, "Not running in a normal physical env")
     def test_mem_channel_identical_size(self):
         util.testcase_append_suggestions(self._testMethodName,
         "Memory size of each channel should be identical")

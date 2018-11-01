@@ -1,12 +1,13 @@
 #!/bin/bash
-# author: aaron
+# author: ke.yi (aaron)
 echo '     _____  _____  _  __'
 echo '    |  __ \|  __ \| |/ /'
 echo '_  _| |__) | |  | |   / '
 echo ' \/ /  ___/| |  | |  <  '
 echo '>  <| |    | |__| | . \ '
 echo '_/\_\_|    |_____/|_|\_\'
-
+echo -e "\033[42;30mservice deployment helper\033[0m"
+echo 
 function get_nr_processor()
 {
     grep '^processor' /proc/cpuinfo | wc -l
@@ -27,10 +28,9 @@ function get_nr_cores_of_socket()
             print $2 | "sort -un"}'
 }
 
-echo -e "\033[4;33mstarting pre-flight\033[0m"
-echo
-
-echo -e "\033[44;30m**********CPU pre-flight**********\033[0m"
+function cpu_layout()
+{
+echo -e "\033[44;37m**********CPU layout**********\033[0m"
 echo -e '=====\t\tCPU Brief\t\t====='
 nr_processor=`get_nr_processor`
 echo "Logical processors: $nr_processor"
@@ -86,8 +86,6 @@ do
     echo -e core[$num]'\t\t'$(ps -eLo ruser,pid,ppid,lwp,psr,args | awk '{if($5=='$num') print $0}' | wc -l)
     let "num--"
 done
-
-echo
 echo -e '=====\t\tFeatures\t\t====='
 if [ -z "$(dmesg | grep -e DMAR -e IOMMU)" ]; then
     echo 'IOMMU NOT enabled'
@@ -116,9 +114,11 @@ if [ -z "$(lsmod | grep kvm)" ]; then
 else
     echo 'KVM module loaded'
 fi
+}
 
-echo
-echo -e "\033[44;30m**********Memory pre-flight**********\033[0m"
+function mem_layout()
+{
+echo -e "\033[44;37m**********Memory layout**********\033[0m"
 if [ -z "$(egrep -i 'hugepage' /proc/meminfo)" ];
 then
     echo 'no hugepages configured'
@@ -160,8 +160,11 @@ END{
         printf "Memory %s:%s\n", i, arr[i];
     }
 }'
-echo
-echo -e "\033[44;30m**********NIC pre-flight**********\033[0m"
+}
+
+function nic_layout()
+{
+echo -e "\033[44;37m**********NIC layout**********\033[0m"
 echo
 echo -e '=====\t\tNIC Cap and DPDK-Support checking\t\t====='
 #refer to command below to generate dpdk supported device id(supported_nic_dev_id) based on actual envioroment:
@@ -203,7 +206,7 @@ do
 done
 
 echo
-echo -e "\033[44;30m**********DPDK pre-flight**********\033[0m"
+echo -e "\033[44;37m**********DPDK layout**********\033[0m"
 echo -e '=====\t\tOVS checking\t\t====='
 if [ -n "$(ps -aux | grep ovs-vswitchd)" ] && [ -n "$(test -e /var/run/openvswitch/db.sock && echo "true")" ];
 then
@@ -214,10 +217,11 @@ fi
 
 # check dpdk-socket-mem, dpdk-lcore-mask, and pmd-cpu-mask in configuration in ovs thread
 # TBD
+}
 
-
-echo
-echo -e "\033[44;30m**********SPDK pre-flight**********\033[0m"
+function spdk_layout()
+{
+echo -e "\033[44;37m**********SPDK layout**********\033[0m"
 echo -e '=====\t\tdisk probing\t\t====='
 
 # backport disk probe function from community
@@ -291,6 +295,79 @@ for dev_id in $TMP; do
         echo -e "$bdf\t$node\t\t$driver"
     done
 done
+}
 
-echo -e "\033[4;33menf of pre-flight\033[0m"
+function dpdk_layout()
+{
+    #partial function had been move to nic_layout
+    echo
+}
 
+function pmdk_layout()
+{
+    #TBD
+    echo
+}
+
+ARGS=$(getopt -o hvacmnf:s -- "$@")
+if [ $? != 0 ] ; then echo "terminating..." >&2 ; exit ; fi 
+if [ $# -lt 1 ] ; then echo "use -h/--help to check available options" >&2 ; exit ; fi 
+
+set -- $ARGS
+while true;
+do
+    case "$1" in
+        -a|--all)
+            echo "display all information set"
+            cpu_layout
+            mem_layout
+            nic_layout
+            dpdk_layout
+            spdk_layout
+            pmdk_layout
+            shift 
+            ;;
+        -c|--cpu)
+            cpu_layout
+            shift  
+            ;;
+        -m|--mem)
+            mem_layout
+            shift  
+            ;;
+        -n|--nic)
+            nic_layout
+            shift  
+            ;;
+        -f|--file)
+            #log_to_file $2
+            shift 2 
+            ;;
+        -s|--spdk)
+            spdk_layout
+            shift 1 
+            ;;
+        -v|--version)
+            echo "initial version"
+            shift
+            ;;
+        -h|--help)
+            echo "script option as follows:"
+            echo -e "\t-a: show all set of system information"
+            echo -e "\t-c: show cpu layout"
+            echo -e "\t-m: show memory layout"
+            echo -e "\t-n: show nic layout"
+            echo -e "\t-s: show spdk layout"
+            echo -e "\t-f: [filename] dump info to file"
+            shift
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *) 
+            echo "unknow options:{$1}"
+            exit 1
+            ;;
+    esac
+done

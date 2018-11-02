@@ -206,3 +206,22 @@ class hwconftest(unittest.TestCase):
                 first_channel_size = channel_size
             else:
                 self.assertEqual(first_channel_size, channel_size)
+
+    """
+    Verify installed DIMM slot location(s) are indentical of each channel
+    """
+    @unittest.skipIf(globalvar.NORMAL_PHY_HOST_MEM == False, "Not running in a normal physical env")
+    def test_mem_channel_identical_locations(self):
+        util.testcase_append_suggestions(self._testMethodName,
+        "Install memory at identical slot location(s) each channel")
+        for i in range(self.mem.memory_channels_num):
+            locations = []
+            for j in range(self.mem.memory_DIMM_per_channel):
+                if self.mem.dimms[i * self.mem.memory_DIMM_per_channel + j].memory_size != "No Module Installed":
+                    locations.append(1)
+                else:
+                    locations.append(0)
+            if i == 0:
+                first_channel_locations = locations
+            else:
+                self.assertEqual(first_channel_locations, locations)

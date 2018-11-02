@@ -98,6 +98,7 @@ class Huagepage_conf:
         self.hugepage_total_num = self.__get_hugepage_total_num()
         self.hugepage_free_num = self.__get_huagepage_free_num()
         self.hugepage_mem_size = self.__get_hugepage_mem_size()
+        self.transparent_hp_enabled = self.__get_thp_enabled()
 
     """
     Huagepage related utility functions
@@ -116,3 +117,15 @@ class Huagepage_conf:
         command = 'cat /proc/meminfo'
         n = util.str_get_specific_value_after_colon(command, 'HugePages_Total')
         return int(n)
+
+    def __get_thp_enabled(self):
+        path = '/sys/kernel/mm/transparent_hugepage/enabled'
+        output = util.get_cat_command_output(path)
+        if output == None:
+            return None
+        loc = output.find('[')
+        #[never]
+        if output[loc + 1] == 'n':
+            return False
+        else:
+            return True

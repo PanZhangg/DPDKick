@@ -24,6 +24,13 @@ class kernelconftest(unittest.TestCase):
         self.assertEqual(self.hugepage_mem.hugepage_mem_size , '1048576 kB')
 
     """
+    Verify transparent-hugepage is disabled
+    """
+    def test_THP_disabled(self):
+        util.testcase_append_suggestions(self._testMethodName, "echo never > /sys/kernel/mm/transparent_hugepage/enabled")
+        self.assertEqual(self.hugepage_mem.transparent_hp_enabled, False)
+
+    """
     Verify if masked CPU cores(indicated in dpdk.conf
     file) are included in isolcpus configuration list
     """

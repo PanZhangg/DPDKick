@@ -27,6 +27,9 @@ class kernelconftest(unittest.TestCase):
     Verify transparent-hugepage is disabled
     """
     def test_THP_disabled(self):
+        #Actually this feature is not always good to be desiabled
+        #It depends on the total memory the system has and other other environment parameters
+        #This testcase will be updated after DPDKick has more dynamic detection features
         util.testcase_append_suggestions(self._testMethodName, "echo never > /sys/kernel/mm/transparent_hugepage/enabled")
         self.assertEqual(self.hugepage_mem.transparent_hp_enabled, False)
 

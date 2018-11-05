@@ -112,7 +112,8 @@ Utilities for reading conf file
 #Append new configuration file parameters here
 CONF_FILE_PARAMETERS = [
     "dpdk-app-pid",
-    "dpdk-app-cpu-mask"
+    "dpdk-app-cpu-mask",
+    "dpdk-master-core"
 ]
 
 def check_conf_file_is_completed():
@@ -151,6 +152,10 @@ def get_dpdk_app_pid():
 def get_cpu_mask():
     mask = get_specific_conf_from_conf_file('dpdk-app-cpu-mask')
     return mask
+
+def get_dpdk_master_cpu():
+    master = get_specific_conf_from_conf_file('dpdk-master-core')
+    return master
 
 def convert_cpu_mask_into_int(mask):
     n = int(mask, 16)

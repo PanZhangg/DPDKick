@@ -27,6 +27,17 @@ class swconftest(unittest.TestCase):
         self.assertLess(nr_thread, nr_cpu)
 
     """
+    Verify DPDK worker is not running on CPU 0
+    """
+    def test_worker_not_CPU0(self):
+        util.testcase_append_suggestions(self._testMethodName, "Do not assign CPU0 to DPDK worker thread")
+        cpu_ids = self.sw.get_cpu_list_by_mask(self.cpu.cpu_core_total_num)
+        worker_cpu0 = False
+        if 0 in cpu_ids:
+            worker_cpu0 = True
+        self.assertEqual(worker_cpu0, False)
+
+    """
     Verify if DPDK NICs and pinning CPU cores are at the same
     NUMA node
     """

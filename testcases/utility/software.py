@@ -18,6 +18,7 @@ class Software_conf():
         self.pid = self.__get_sw_pid()
         self.cpu_mask = self.__get_cpu_mask()
         self.thread_num = self.__get_sw_threads_num(self.pid)
+        self.master_cpu_core = self.__get_sw_master_cpu_core()
 
     """
     Software PID is read from file dpdkick.conf
@@ -32,6 +33,9 @@ class Software_conf():
     """
     def __get_cpu_mask(self):
         return util.get_cpu_mask()
+
+    def __get_sw_master_cpu_core(self):
+        return util.get_dpdk_master_cpu()
 
     def get_cpu_list_by_mask(self, cpu_total_num):
         n = util.convert_cpu_mask_into_int(self.cpu_mask)

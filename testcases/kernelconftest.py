@@ -13,7 +13,7 @@ class kernelconftest(unittest.TestCase):
     """
     Verify if NMI is disabled
     """
-    def test_nmi_is_disable(self):
+    def test_nmi_is_disabled(self):
         self.assertEqual(self.kernel.nmi_is_disabled, True)
 
     """

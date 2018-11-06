@@ -128,7 +128,7 @@ class hwconftest(unittest.TestCase):
     Verify DPDK nics' DevCap Maxpayload and DevCtl Maxpayload are
     identical
     """
-    def test_NIC_devcap_devctl_maypayload(self):
+    def test_NIC_devcap_devctl_maxpayload(self):
         util.testcase_append_suggestions(self._testMethodName,
         "Set the maxpayload to identical number")
         for i in range(self.nics.nic_total_num):

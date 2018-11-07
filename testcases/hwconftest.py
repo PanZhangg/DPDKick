@@ -107,9 +107,16 @@ class hwconftest(unittest.TestCase):
     def test_NIC_LnkCap_speed_8GT(self):
         util.testcase_append_suggestions(self._testMethodName,
         "Install NIC in a Width x8 Gen3 PCIe slot")
+        detected = []
+        result = True
         for i in range(self.nics.nic_total_num):
             nic = self.nics.nics_conf[i]
-            self.assertEqual(nic.LnkCap, "8GT/s")
+            if nic.LnkCap != "8GT/s":
+                detected.append(nic.pci_address)
+                result = False
+        if result == False:
+            util.format_print_detected_dev_list(detected)
+        self.assertEqual(result, True)
 
     """
     Verify DPDK nics' PCIe Speed and target link speed are

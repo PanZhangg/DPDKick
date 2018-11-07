@@ -105,6 +105,9 @@ def format_print_test_suite_title(title):
 def testcase_append_suggestions(testcase, suggestion):
     testcases_suggestions[testcase] = suggestion
 
+def format_print_detected_dev_list(l):
+    print ('{0} {1}'.format("Detected failed device(s): ", l))
+
 """
 Utilities for reading conf file
 """

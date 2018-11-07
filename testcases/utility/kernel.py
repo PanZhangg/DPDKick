@@ -24,7 +24,8 @@ class Kernel_conf():
         output = util.str_cmd_output('cat /etc/default/grub')
         lines = output.split('\n')
         for line in lines:
-            if line.find('GRUB_CMDLINE_LINUX') != -1:
+            l = line.split('=')[0]
+            if l == "GRUB_CMDLINE_LINUX":
                 break
         return line
 

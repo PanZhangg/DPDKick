@@ -125,11 +125,18 @@ class hwconftest(unittest.TestCase):
     def test_NIC_PCIe_target_link_speed(self):
         util.testcase_append_suggestions(self._testMethodName,
         "Configure target link speed equal to PCIe speed")
+        detected = []
+        result = True
         for i in range(self.nics.nic_total_num):
             nic = self.nics.nics_conf[i]
             if nic.pcie_targetlinkspeed == None:
                 continue
-            self.assertEqual(nic.LnkCap, nic.pcie_targetlinkspeed)
+            if nic.pcie_targetlinkspeed != nic.LnkCap:
+                detected.append(nic.pci_address)
+                result = False
+        if result == False:
+            util.format_print_detected_dev_list(detected)
+        self.assertEqual(result, True)
 
     """
     Verify DPDK nics' DevCap Maxpayload and DevCtl Maxpayload are
@@ -138,10 +145,17 @@ class hwconftest(unittest.TestCase):
     def test_NIC_devcap_devctl_maxpayload(self):
         util.testcase_append_suggestions(self._testMethodName,
         "Set the maxpayload to identical number")
+        detected = []
+        result = True
         for i in range(self.nics.nic_total_num):
             nic = self.nics.nics_conf[i]
-            self.assertEqual(nic.pcie_devcap_maxpayloadsize ,
-                             nic.pcie_devctl_maxpayloadsize)
+            if nic.pcie_devcap_maxpayloadsize != nic.pcie_devctl_maxpayloadsize:
+                detected.append(nic.pci_address)
+                result = False
+        if result == False:
+            util.format_print_detected_dev_list(detected)
+        self.assertEqual(result, True)
+
     """
     Verify DPDK nics' LnkCap and LnkSta are identical
     """

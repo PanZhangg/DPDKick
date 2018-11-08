@@ -160,9 +160,16 @@ class hwconftest(unittest.TestCase):
     Verify DPDK nics' LnkCap and LnkSta are identical
     """
     def test_NIC_LnkCap_LnkSta_identical(self):
+        detected = []
+        result = True
         for i in range(self.nics.nic_total_num):
             nic = self.nics.nics_conf[i]
-            self.assertEqual(nic.LnkCap, nic.LnkSta)
+            if nic.LnkCap != nic.LnkSta:
+                detected.append(nic.pci_address)
+                result = False
+        if result == False:
+            util.format_print_detected_dev_list(detected)
+        self.assertEqual(result, True)
 
     """
     Verify Memory speed is equal to DDR4 frequency(2133 MHz)

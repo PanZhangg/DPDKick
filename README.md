@@ -20,6 +20,7 @@ import unittest
 class mytest_class(unittest.TestCase):
     # Each testcase's def name must start with "test_"
     def test_mytest_test1(self):
+        # Add suggestion info if this TC fails
         # Testlogic
         self.assertEqual(my_assert)
 ```

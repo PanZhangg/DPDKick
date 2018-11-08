@@ -106,7 +106,16 @@ def testcase_append_suggestions(testcase, suggestion):
     testcases_suggestions[testcase] = suggestion
 
 def format_print_detected_dev_list(l):
-    print ('{0} {1}'.format("Detected failed device(s): ", l))
+    print ("Detected failed device(s):")
+    printed = 0
+    for i in range(len(l)):
+        # shorten the print len in order to maintain the table format
+        if i % 3 == 0 and i != 0:
+            ll = l[i - 3 : i]
+            print ll
+            printed = printed + 3
+    if printed < len(l):
+        print l[printed:]
 
 """
 Utilities for reading conf file

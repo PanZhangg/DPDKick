@@ -172,7 +172,7 @@ class hwconftest(unittest.TestCase):
         self.assertEqual(result, True)
 
     """
-    Verify Memory speed is equal to DDR4 frequency(2133 MHz)
+    Verify Memory speed is equal or larger to DDR4 frequency(2133 MHz)
     """
     @unittest.skipIf(globalvar.NORMAL_PHY_HOST_MEM == False, "Not running in a normal physical env")
     def test_mem_speed_ddr4(self):
@@ -180,7 +180,7 @@ class hwconftest(unittest.TestCase):
         "Recommanded to use DDR4 memory")
         for i in self.mem.dimms:
             if i.memory_speed != "Unknown":
-                self.assertEqual(i.memory_speed, "2133 MHz")
+                self.assertGreaterEqual(i.memory_speed, 2133)
 
     """
     Verify Memory speed is equal to Memory configured speed

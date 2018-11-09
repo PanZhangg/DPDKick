@@ -215,12 +215,20 @@ class Memory_conf:
         for l in self.dmidecode_output:
             if l.find("Speed") != -1 and l.find("Configured") == -1:
                 if cnt == index:
-                    return l.split(":")[1].strip()
+                    speed = l.split(":")[1].strip()
+                    if speed != "Unknown":
+                        return int(speed.split(" ")[0].strip())
+                    else:
+                        return speed
                 cnt = cnt + 1
         return None
 
     def __get_mem_conf_speed(self, index):
-        return self.__get_mem_dimm_spec_conf("Configured Clock Speed", index)
+        speed = self.__get_mem_dimm_spec_conf("Configured Clock Speed", index)
+        if speed != "Unknown":
+            return int(speed.split(" ")[0].strip())
+        else:
+            return speed
 
     def __get_mem_bank_locator(self, index):
         return self.__get_mem_dimm_spec_conf("Bank Locator", index)

@@ -27,6 +27,21 @@ class swconftest(unittest.TestCase):
         self.assertLess(nr_thread, nr_cpu)
 
     """
+    Verify masked CPU(s) are at the same NUMA node
+    """
+    def test_masked_cpu_numa_node(self):
+        util.testcase_append_suggestions(self._testMethodName, "Masked CPU(s) should on the same NUMA node")
+        cpu_ids = self.sw.get_cpu_list_by_mask(self.cpu.cpu_core_total_num)
+        prev_cpu_node = 0
+        cnt = 0
+        for cpu_id in cpu_ids:
+            cpu = self.cpu.get_single_CPU_conf_by_id(cpu_id)
+            if cnt == 0:
+                prev_cpu_node = cpu.numa_node
+            cnt = cnt + 1
+            self.assertEqual(prev_cpu_node, cpu.numa_node)
+
+    """
     Verify DPDK worker is not running on CPU 0
     """
     def test_worker_not_CPU0(self):

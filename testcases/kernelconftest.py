@@ -24,10 +24,22 @@ class kernelconftest(unittest.TestCase):
         self.assertEqual(self.hugepage_mem.hugepage_mem_size , '1048576 kB')
 
     """
+    Verify hugepage is available on masked CPU(s) NUMA node
+    """
+    def test_hugepage_valid_on_CPU_NUMA(self):
+        util.testcase_append_suggestions(self._testMethodName, "Create hugepage in this NUMA node")
+        cpu_ids = self.sw.get_cpu_list_by_mask(self.cpu.cpu_core_total_num)
+        cpu = self.cpu.get_single_CPU_conf_by_id(cpu_ids[0])
+        node = cpu.numa_node
+        path = "/sys/devices/system/node/node" + str(node) + "/hugepages/hugepages-1048576kB/nr_hugepages"
+        nr = int(util.get_cat_command_output(path))
+        self.assertGreater(nr, 0)
+
+    """
     Verify transparent-hugepage is disabled
     """
     def test_THP_disabled(self):
-        #Actually this feature is not always good to be desiabled
+        #Actually this feature is not always good to be disabled
         #It depends on the total memory the system has and other other environment parameters
         #This testcase will be updated after DPDKick has more dynamic detection features
         util.testcase_append_suggestions(self._testMethodName, "echo never > /sys/kernel/mm/transparent_hugepage/enabled")

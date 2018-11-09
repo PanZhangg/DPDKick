@@ -13,6 +13,9 @@ class hwconftest(unittest.TestCase):
     cpu = env.g_env_conf.cpu_conf
     mem = env.g_env_conf.mem_conf
 
+#===============================================
+#CPU related testcases
+#===============================================
     """
     Verify if NUMA is enabled
     """
@@ -101,6 +104,10 @@ class hwconftest(unittest.TestCase):
         "DISABLE this feature in BIOS")
         self.assertEqual(self.cpu.b_pstate_disabled, True)
 
+#===============================================
+#NIC related testcases
+#===============================================
+
     """
     Verify DPDK nics' PCIe Speed is 8GT/s in LnkCap
     """
@@ -170,6 +177,10 @@ class hwconftest(unittest.TestCase):
         if result == False:
             util.format_print_detected_dev_list(detected)
         self.assertEqual(result, True)
+
+#===============================================
+#Memory related testcases
+#===============================================
 
     """
     Verify Memory speed is equal or larger to DDR4 frequency(2133 MHz)

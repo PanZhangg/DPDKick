@@ -58,7 +58,7 @@ class hwconftest(unittest.TestCase):
     """
     def test_CPU_sg_is_perf(self):
         util.testcase_append_suggestions(self._testMethodName,
-        "Set \'performance\' to /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor")
+        "Set \'performance\' to /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor or use cpupower tool")
         ret = True
         if self.cpu.scaling_governor == None:
             #Fail this testcase
@@ -164,7 +164,7 @@ class hwconftest(unittest.TestCase):
         self.assertEqual(result, True)
 
     """
-    Verify DPDK nics' LnkCap and LnkSta are identical
+    Verify DPDK nics' LnkCap and LnkSta speed are identical
     """
     def test_NIC_LnkCap_LnkSta_identical(self):
         detected = []
@@ -264,3 +264,12 @@ class hwconftest(unittest.TestCase):
                 first_channel_locations = locations
             else:
                 self.assertEqual(first_channel_locations, locations)
+
+#===============================================
+#Others
+#===============================================
+    """
+    Verify is HPET is enabled
+    """
+    def test_HPET_enabled(self):
+        pass

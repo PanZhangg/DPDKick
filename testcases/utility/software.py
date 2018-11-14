@@ -16,6 +16,7 @@ class sw_runtime_telemetry():
 class Software_conf():
     def __init__(self):
         self.pid = self.__get_sw_pid()
+        self.process_name = self.__get_process_name(self.pid)
         self.cpu_mask = self.__get_cpu_mask()
         self.thread_num = self.__get_sw_threads_num(self.pid)
         self.master_cpu_core = self.__get_sw_master_cpu_core()
@@ -26,6 +27,19 @@ class Software_conf():
     """
     def __get_sw_pid(self):
         return util.get_dpdk_app_pid()
+        #TODO: uncomment below
+        #pid = util.get_dpdk_app_pid()
+        #exist = self.__check_pid_is_exists(pid)
+        #if exist == False:
+        #    print 'PID not exists'
+        #    raise SystemExit
+
+    def __check_pid_is_exists(self, pid):
+        pids = util.get_all_sys_pids()
+        if pid in pids:
+            return True
+        else:
+            return False
 
     """
     Software cpu mask for pinning workload to
@@ -47,6 +61,10 @@ class Software_conf():
                 l.append(i)
             n = n >> 1
         return l
+
+    def __get_process_name(self, pid):
+        #TODO:
+        return "None"
 
     def __get_sw_threads_num(self, pid):
         command = 'ps -o nlwp ' + str(pid)

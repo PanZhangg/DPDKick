@@ -3,7 +3,9 @@ import os
 testcases_suggestions = dict()
 
 """
+====================================
 Utilities for OS command interaction
+====================================
 """
 
 def str_cmd_output(cmd):
@@ -28,17 +30,6 @@ def get_cat_command_output(file_path):
         return None
     output = str_cmd_output('cat ' + file_path)
     return output
-
-"""
-Utilities for OS operation
-"""
-
-def check_if_command_exists(command):
-    output = str_cmd_output('command -v ' + command)
-    if output  == None:
-        return True
-    else:
-        return False
 
 """
 Return 'value' in for string like 'A=value'
@@ -81,7 +72,26 @@ def convert_multipule_str_range_to_int_list(range_str):
         return num_list
 
 """
+==========================
+Utilities for OS operation
+==========================
+"""
+
+def check_if_command_exists(command):
+    output = str_cmd_output('command -v ' + command)
+    if output  == None:
+        return True
+    else:
+        return False
+
+def get_all_sys_pids():
+    pids = [int(x) for x in os.listdir('/proc') if x.isdigit()]
+    return pids
+
+"""
+================================
 Utilities for formatted printing
+================================
 """
 
 def format_print_launch_screen():
@@ -118,7 +128,9 @@ def format_print_detected_dev_list(l):
         print l[printed:]
 
 """
+===============================
 Utilities for reading conf file
+===============================
 """
 
 #Append new configuration file parameters here

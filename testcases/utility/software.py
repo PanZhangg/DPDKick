@@ -59,9 +59,9 @@ class Software_conf(software_base):
             self.process_name = "None"
         else:
             self.process_name = self.__get_process_name(self.pid)
-            self.cpu_mask = self.__get_cpu_mask()
-            self.thread_num = self.__get_sw_threads_num(self.pid)
-            self.master_cpu_core = self.__get_sw_master_cpu_core()
+        self.cpu_mask = self.__get_cpu_mask()
+        self.thread_num = self.__get_sw_threads_num(self.pid)
+        self.master_cpu_core = self.__get_sw_master_cpu_core()
 
 
     """

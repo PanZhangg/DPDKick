@@ -88,6 +88,9 @@ def get_all_sys_pids():
     pids = [int(x) for x in os.listdir('/proc') if x.isdigit()]
     return pids
 
+def open_binary(fname, **kwargs):
+    return open(fname, "rb", **kwargs)
+
 """
 ================================
 Utilities for formatted printing
@@ -165,6 +168,8 @@ def get_specific_conf_from_conf_file(conf):
             break
     if l == '':
         print '[Error]: No such configuration'
+        f.close()
+        return 0
     spec = l.split('=')[1]
     f.close()
     return spec

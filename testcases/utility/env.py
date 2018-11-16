@@ -17,6 +17,7 @@ class env():
         self.hugepage_mem = kernelutil.Huagepage_conf()
 
         #globalvar init
+        #TODO: Need to delete this line after test phase
         globalvar.CONF_PID_IS_VALID = util.check_conf_file_is_completed()
         globalvar.MSR_TOOLS_IS_INSTALLED = util.check_if_command_exists('rdmsr')
         globalvar.PERF_TOOLS_IS_INSTALLED = util.check_if_command_exists('pcm.x')

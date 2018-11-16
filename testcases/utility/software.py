@@ -9,6 +9,8 @@ class software_base():
     def __init__(self):
         self.pid = self.__get_sw_pid()
         self.pid_exists = self.__check_pid_is_exists(self.pid)
+        if self.pid_exists == False:
+            globalvar.CONF_PID_IS_VALID = False
 
     """
     Software PID is read from file dpdkick.conf
@@ -16,12 +18,6 @@ class software_base():
     """
     def __get_sw_pid(self):
         return util.get_dpdk_app_pid()
-        #TODO: uncomment below
-        #pid = util.get_dpdk_app_pid()
-        #exist = self.__check_pid_is_exists(pid)
-        #if exist == False:
-        #    print 'PID not exists'
-        #    raise SystemExit
 
     def __check_pid_is_exists(self, pid):
         pids = util.get_all_sys_pids()
@@ -55,12 +51,12 @@ class Software_conf(software_base):
     def __init__(self):
         software_base.__init__(self)
         if self.pid_exists == False:
-            print "PID does not exists, some software tests will be skipped"
             self.process_name = "None"
+            self.thread_num = 0
         else:
             self.process_name = self.__get_process_name(self.pid)
+            self.thread_num = self.__get_sw_threads_num(self.pid)
         self.cpu_mask = self.__get_cpu_mask()
-        self.thread_num = self.__get_sw_threads_num(self.pid)
         self.master_cpu_core = self.__get_sw_master_cpu_core()
 
 
@@ -93,7 +89,4 @@ class Software_conf(software_base):
         command = 'ps -o nlwp ' + str(pid)
         output = util.str_cmd_output(command)
         l = output.split('\n')[1]
-        if l == '':
-            globalvar.CONF_PID_IS_VALID = False
-        else:
-            return int(l)
+        return int(l)

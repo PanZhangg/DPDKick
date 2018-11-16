@@ -10,6 +10,14 @@ class sw_runtime_telemetry():
         self.process_context_switch_rate = 0
         self.cpus_ipc = []
 
+    def __parse_stat_file(self, pid):
+        with open_binary("%s/%s/stat" % ("/proc", pid) as f:
+            data = f.read()
+        rpar = data.rfind(b')')
+        name = data[data.find(b'(') + 1:rpar]
+        others = data[rpar + 2 :].split()
+        return [name] + others
+
     def update_all(self):
         pass
 

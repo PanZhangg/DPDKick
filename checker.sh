@@ -309,7 +309,19 @@ function pmdk_layout()
     echo
 }
 
-ARGS=$(getopt -o hvacmnf:s -- "$@")
+function kernel_opt_layout()
+{
+    echo -e "\033[47;34mcpu power model\033[0m"
+    nr_cores=`get_nr_cores_of_socket`
+    num=$nr_cores
+    while [ "$num" -gt 0 ]
+    do
+        echo -e core[$num]'\t'$(cat /sys/devices/system/cpu/cpu$num/cpufreq/scaling_governor)
+        let "num--"
+    done
+}
+
+ARGS=$(getopt -o hvacf:kmns -- "$@")
 if [ $? != 0 ] ; then echo "terminating..." >&2 ; exit ; fi 
 if [ $# -lt 1 ] ; then echo "use -h/--help to check available options" >&2 ; exit ; fi 
 
@@ -325,10 +337,20 @@ do
             dpdk_layout
             spdk_layout
             pmdk_layout
+	    kernel_opt_layout
             shift 
             ;;
         -c|--cpu)
             cpu_layout
+            shift  
+            ;;
+        -f|--file)
+            #log_to_file $2
+            shift 2 
+            ;;
+        -k|--kernel)
+            #log_to_file $2
+	    kernel_opt_layout
             shift  
             ;;
         -m|--mem)
@@ -338,10 +360,6 @@ do
         -n|--nic)
             nic_layout
             shift  
-            ;;
-        -f|--file)
-            #log_to_file $2
-            shift 2 
             ;;
         -s|--spdk)
             spdk_layout

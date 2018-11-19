@@ -45,6 +45,7 @@ class sw_runtime_telemetry(software_base):
         self.cpus_ipc = []
 
     def update_all(self):
+        #TODO:
         pass
 
 class Software_conf(software_base):
@@ -53,9 +54,11 @@ class Software_conf(software_base):
         if self.pid_exists == False:
             self.process_name = "None"
             self.thread_num = 0
+            self.running_cpu_num = "None"
         else:
             self.process_name = self.__get_process_name(self.pid)
             self.thread_num = self.__get_sw_threads_num(self.pid)
+            self.running_cpu_num = self.__get_running_cpu_num(self.pid)
         self.cpu_mask = self.__get_cpu_mask()
         self.master_cpu_core = self.__get_sw_master_cpu_core()
 
@@ -90,3 +93,6 @@ class Software_conf(software_base):
         output = util.str_cmd_output(command)
         l = output.split('\n')[1]
         return int(l)
+
+    def __get_running_cpu_num(self, pid):
+        return int(self.parse_stat_file(pid)[37])

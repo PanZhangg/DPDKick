@@ -67,8 +67,11 @@ def convert_multipule_str_range_to_int_list(range_str):
         l = range_str.split(',')
         num_list = []
         for ll in l:
-            n_l = convert_str_range_to_int_list(ll)
-            num_list = num_list + n_l
+            if ll.find('-') == -1:
+                num_list.append(ll)
+            else:
+                n_l = convert_str_range_to_int_list(ll)
+                num_list = num_list + n_l
         return num_list
 
 """

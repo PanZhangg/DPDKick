@@ -206,6 +206,19 @@ do
 done
 
 echo
+echo -e "\033[47;34mMTU/queue per NIC\033[0m"
+echo -e "Try to use command 'echo > \$bitmask /proc/irq/\$irq_index/smp_affinity' to isolate cpu from interupts"
+printf "%-16s%-16s%-16s%-16s" 'net_device' 'MTU' 'queue avai' 'irq number per queue '
+echo -e '\n===================================================================='
+    for net_dev in $(ls /sys/class/net); do
+        #echo -e $net_dev'\t\t\t'$(cat /sys/class/net/$net_dev/mtu)'\t\t\t'$(ethtool -l $net_dev | grep Combined | grep -n "" | grep "^2" | awk -F: '{print $3}')
+        printf "%-16s%-16s%-16s%-16s\n" $net_dev $(cat /sys/class/net/$net_dev/mtu) $(ethtool -l $net_dev | grep Combined | grep -n "" | grep "^2" | awk -F: '{print $3}') $(cat /proc/interrupts | grep $net_dev | awk '{print $1}' | wc -l)
+        #echo -e $(ethtool -l $net_dev)
+        #printf "%-12s %-20s %-12s\n" $blk_dev $(cat /sys/block/$blk_dev/queue/scheduler) $(cat /sys/block/$blk_dev/queue/read_    ahead_kb)
+
+    done
+    echo
+
 echo -e "\033[44;37m**********DPDK layout**********\033[0m"
 echo -e '=====\t\tOVS checking\t\t====='
 if [ -n "$(ps -aux | grep ovs-vswitchd)" ] && [ -n "$(test -e /var/run/openvswitch/db.sock && echo "true")" ];
@@ -312,13 +325,33 @@ function pmdk_layout()
 function kernel_opt_layout()
 {
     echo -e "\033[47;34mcpu power model\033[0m"
-    nr_cores=`get_nr_cores_of_socket`
-    num=$nr_cores
-    while [ "$num" -gt 0 ]
+    echo -e "Try to use command 'echo performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null'\nto make cpu running in optimized model'"
+    nr_cores=`get_nr_processor`
+    num=$[$nr_cores-1]
+    while [ "$num" -ge 0 ]
     do
-        echo -e core[$num]'\t'$(cat /sys/devices/system/cpu/cpu$num/cpufreq/scaling_governor)
+        #echo -e core[$num]'\t\t'$(cat /sys/devices/system/cpu/cpu$num/cpufreq/scaling_governor)
+        printf "%-8s\t%-10s\t\n" core[$num] $(cat /sys/devices/system/cpu/cpu$num/cpufreq/scaling_governor)
         let "num--"
     done
+    echo
+    echo -e "\033[47;34mdisk schedule/prefetch model\033[0m"
+    echo -e "Try to use 'noop' for ssd and 'dealine' for hdd, and set large value for read_ahead_kb"
+    echo -e "\033[32mblock device\t\tschedule model\t\tread_ahead_kb\033[0m"
+    for blk_dev in $(lsblk | grep disk | awk '{print $1}'); do 
+        echo -e $blk_dev'\t\t'$(cat /sys/block/$blk_dev/queue/scheduler)'\t\t'$(cat /sys/block/$blk_dev/queue/read_ahead_kb)
+        #printf "%-12s %-20s %-12s\n" $blk_dev $(cat /sys/block/$blk_dev/queue/scheduler) $(cat /sys/block/$blk_dev/queue/read_ahead_kb)
+
+    done
+    echo
+    echo -e "\033[47;34mkernel pid max\033[0m"
+    echo $(cat /proc/sys/kernel/pid_max)
+    echo 
+    echo -e "\033[47;34mcgroup options\033[0m"
+    echo -e "/sys/fs/cgroup/cpuset/cpuset.cpus" $(cat /sys/fs/cgroup/cpuset/cpuset.cpus)
+    echo -e "/sys/fs/cgroup/cpuset/cpuset.mems" $(cat /sys/fs/cgroup/cpuset/cpuset.mems)
+    echo -e "For Ceph OSD, try to use command\n'for \$osd_pid in \$(ps -aux | grep osd | grep -v grep | awk '{print \$2}') do echo \$(osd_pid) > /sys/fs/cgroup/cpuset/ceph/cgroup.procs'\nto bind and isolate osd daemons"
+    echo
 }
 
 ARGS=$(getopt -o hvacf:kmns -- "$@")
@@ -332,12 +365,12 @@ do
         -a|--all)
             echo "display all information set"
             cpu_layout
+	    kernel_opt_layout
             mem_layout
             nic_layout
             dpdk_layout
             spdk_layout
             pmdk_layout
-	    kernel_opt_layout
             shift 
             ;;
         -c|--cpu)
@@ -373,6 +406,7 @@ do
             echo "script option as follows:"
             echo -e "\t-a: show all set of system information"
             echo -e "\t-c: show cpu layout"
+            echo -e "\t-k: show kernel parameters"
             echo -e "\t-m: show memory layout"
             echo -e "\t-n: show nic layout"
             echo -e "\t-s: show spdk layout"

@@ -22,6 +22,8 @@ class env():
         globalvar.MSR_TOOLS_IS_INSTALLED = util.check_if_command_exists('rdmsr')
         globalvar.PERF_TOOLS_IS_INSTALLED = util.check_if_command_exists('pcm.x')
 
+        globalvar.ENV_CONF_TYPE=util.get_env_conf_type()
+
     def rt_telemetry_update_all(self):
         self.rt_telemetry.update_all()
 

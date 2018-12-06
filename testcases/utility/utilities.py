@@ -189,6 +189,10 @@ def get_dpdk_master_cpu():
     master = get_specific_conf_from_conf_file('dpdk-master-core')
     return master
 
+def get_env_conf_type():
+    type = get_specific_conf_from_conf_file('dpdkick_conf_type');
+    return type
+
 def convert_cpu_mask_into_int(mask):
     n = int(mask, 16)
     return n

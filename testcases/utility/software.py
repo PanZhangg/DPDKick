@@ -37,17 +37,6 @@ class software_base():
         others = data[rpar + 2 :].split()
         return [name] + others
 
-class sw_runtime_telemetry(software_base):
-    def __init__(self):
-        software_base.__init__(self)
-        self.mem_bandwidth = 0
-        self.process_context_switch_rate = 0
-        self.cpus_ipc = []
-
-    def update_all(self):
-        #TODO:
-        pass
-
 class Software_conf(software_base):
     def __init__(self):
         software_base.__init__(self)
@@ -96,3 +85,25 @@ class Software_conf(software_base):
 
     def __get_running_cpu_num(self, pid):
         return int(self.parse_stat_file(pid)[37])
+
+class sw_runtime_telemetry(Software_conf):
+
+    def __init__(self):
+        Software_conf.__init__(self)
+        self.mem_bandwidth = 0
+        self.pcie_bandwidth = 0
+        self.process_context_switch_rate = 0
+        self.cpus_ipc = []
+        self.process_id_running_on_dpdk_cpu = dict()
+
+    # Verify if there's other process are using DPDK CPU cores
+    # This may sometimes lead to packet drop
+    def update_pid_running_on_dpdk_cpu(self):
+        #cpu_list = self.get_cpu_list_by_mask
+            """
+            [CPU X][pid1, pid2, ...]
+            """
+
+    def update_all(self):
+        #TODO:
+        pass

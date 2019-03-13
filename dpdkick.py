@@ -24,7 +24,7 @@ def dpdkick_main():
         sw_conf_test_suite = unittest.TestLoader().loadTestsFromTestCase(swconftest.swconftest)
         kernel_conf_test_suite = unittest.TestLoader().loadTestsFromTestCase(kernelconftest.kernelconftest)
     else:
-        print "Invalid Configuration Type"
+        print "Invalid DPDKick Configuration Type"
         print "program exit.."
         raise SystemExit
 

@@ -225,6 +225,8 @@ class Memory_conf:
 
     def __get_mem_conf_speed(self, index):
         speed = self.__get_mem_dimm_spec_conf("Configured Clock Speed", index)
+        if speed == None:
+            return "Unknown"
         if speed != "Unknown":
             return int(speed.split(" ")[0].strip())
         else:
